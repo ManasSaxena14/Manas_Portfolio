@@ -8,12 +8,12 @@ export const ABOUT_TEXT = `I'm a second-year student pursuing B-Tech in Artifici
 
 export const PROJECTS = [
   {
-    title: "Auction Platform",
+    title: "BidVerse - The Auction Platform",
     image: project1,
     description:
       "A full-stack Auction Platform built with the MERN stack, featuring real-time bidding, user authentication, dashboards, and automated payment verification.",
     technologies: ["MongoDB", "Express", "React", "Node.js"],
-    link: "https://github.com/ManasSaxena14"
+    link: "https://bidverse-the-auction-platform.netlify.app/"
   },
   {
     title: "Crypto X Tracker",
@@ -21,7 +21,7 @@ export const PROJECTS = [
     description:
       "A responsive frontend Crypto Tracker built with React, providing real-time cryptocurrency prices, market trends, and interactive UI for seamless tracking.",
     technologies: ["React", "CSS", "JavaScript"],
-    link: "https://github.com/ManasSaxena14"
+    link: "https://crypto-x-tracker.netlify.app/"
   },
   {
     title: "Study Buddy",
