@@ -7,7 +7,9 @@ const { eyebrow, avatar, facts, lead, paragraphs, education, resumeLabel } = por
 
 export default function About() {
   return (
-    <section id="about" className="sec-pad relative">
+    <section id="about" data-ambient className="sec-pad relative overflow-x-clip">
+      <span aria-hidden className="ambient-blob -top-[8%] -right-[10%]" />
+      <span aria-hidden className="ambient-blob ambient-blob-b bottom-[4%] -left-[14%]" />
       <div className="wrap">
         <SectionHeader eyebrow={eyebrow} index="(06)" />
         <div className="mt-[clamp(40px,5vw,72px)] grid grid-cols-1 items-start gap-[clamp(36px,5vw,80px)] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">

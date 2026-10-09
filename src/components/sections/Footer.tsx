@@ -7,7 +7,7 @@ import LocalTime from "@/components/LocalTime";
 import { Accent, Arrow, RollLabel } from "@/components/SectionHeader";
 import { gsap, MOTION_OK, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
-const { firstName, lastName, socials, status, footer, email, nav, resumeUrl, location } = portfolio;
+const { firstName, lastName, socials, status, email, nav, resumeUrl, location } = portfolio;
 
 // A circuit trace across the footer; corners carry little solder pads.
 const SIGNAL = "M0 40 H250 L280 12 H520 L548 40 H800 L826 66 H1090 L1116 40 H1600";
@@ -241,7 +241,7 @@ export default function Footer() {
             <div data-f-col className="col-span-2 flex flex-col gap-4 md:col-span-1">
               <h3 className="f-label">Right now</h3>
               <div className="flex flex-col gap-1">
-                <LocalTime className="font-display text-[clamp(30px,2.8vw,42px)] leading-none font-[620] tracking-[-.03em] text-ink" />
+                <LocalTime className="font-display text-[clamp(30px,2.8vw,42px)] leading-none font-[640] tracking-[-.02em] text-ink" />
                 <span className="font-mono text-[11px] tracking-[.14em] text-dim uppercase">{location}</span>
               </div>
               <span className="flex items-center gap-2.5 font-mono text-[11px] tracking-[.14em] text-ink-2 uppercase">
@@ -284,9 +284,6 @@ export default function Footer() {
           <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t border-line-soft py-5 font-mono text-[11px] tracking-[.12em] text-dim uppercase">
             <p className="m-0">
               © {new Date().getFullYear()} {fullName}
-            </p>
-            <p className="m-0 hidden md:block">
-              {footer.credit} · Next.js · GSAP · three.js
             </p>
             <BackToTop />
           </div>

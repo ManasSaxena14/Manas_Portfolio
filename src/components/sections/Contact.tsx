@@ -100,12 +100,14 @@ export default function Contact() {
   const borderFor = (k: Field) => ({ borderColor: errors[k] ? "var(--color-error)" : undefined });
 
   return (
-    <section id="contact" data-ambient className="relative pt-[clamp(96px,13vw,180px)] pb-[clamp(48px,6vw,80px)]">
+    <section id="contact" data-ambient className="relative overflow-x-clip pt-[clamp(96px,13vw,180px)] pb-[clamp(48px,6vw,80px)]">
+      <span aria-hidden className="ambient-blob top-[6%] -left-[12%]" />
+      <span aria-hidden className="ambient-blob ambient-blob-b -right-[14%] bottom-[8%]" />
       <div className="wrap">
         <SectionHeader eyebrow={eyebrow} index="(07)" />
         <SplitWords
           text={heading}
-          className="mt-7 mb-0 max-w-[13ch] font-display text-[clamp(48px,8.6vw,148px)] leading-[.92] font-[560] [font-stretch:104%] tracking-[-.05em]"
+          className="mt-7 mb-0 max-w-[13ch] font-display text-[clamp(48px,8.6vw,148px)] leading-[.92] font-[600] tracking-[-.038em]"
         />
 
         <div className="mt-[clamp(48px,6vw,88px)] grid grid-cols-1 items-start gap-[clamp(40px,6vw,96px)] lg:grid-cols-2">
@@ -116,7 +118,7 @@ export default function Contact() {
             <div data-reveal="" className="flex flex-wrap items-center gap-x-4 gap-y-3">
               <a
                 href={`mailto:${email}`}
-                className="font-display text-[clamp(24px,2.8vw,40px)] font-[560] tracking-[-.03em] break-all underline decoration-line-strong decoration-1 underline-offset-8 transition-[color,text-decoration-color] duration-300 hover:decoration-accent"
+                className="font-display text-[clamp(24px,2.8vw,40px)] font-[600] tracking-[-.02em] break-all underline decoration-line-strong decoration-1 underline-offset-8 transition-[color,text-decoration-color] duration-300 hover:decoration-accent"
               >
                 {email}
               </a>

@@ -16,7 +16,7 @@ export default function Interactions() {
   useEffect(() => {
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
     if (prefersReducedMotion()) return;
-    const lenis = new Lenis({ autoRaf: false, lerp: 0.09, wheelMultiplier: 1, touchMultiplier: 1.4 });
+    const lenis = new Lenis({ autoRaf: false, lerp: 0.075, wheelMultiplier: 0.95, touchMultiplier: 1.4 });
     setLenis(lenis);
     // One clock for everything: GSAP's ticker drives Lenis, and every Lenis
     // scroll updates ScrollTrigger in the same frame, so scrubbed animations

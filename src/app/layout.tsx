@@ -1,17 +1,40 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import localFont from "next/font/local";
 import { fullName, portfolio } from "@/data/portfolio";
 import { siteUrl } from "@/lib/site";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 
-// Geist is variable (100–900): the hero name swells in weight under the cursor.
-const geist = Geist({ subsets: ["latin"], variable: "--nf-geist", display: "swap" });
-const geistMono = Geist_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--nf-geist-mono", display: "swap" });
-const serif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
+// Self-hosted variable fonts (npm @fontsource packages), so the build never
+// depends on reaching Google Fonts.
+// Bricolage Grotesque: characterful display face (wght 200–800). The hero
+// name swells in weight under the cursor.
+const display = localFont({
+  src: "../../node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2",
+  weight: "200 800",
+  variable: "--nf-display",
+  display: "swap",
+});
+// Geist stays as the clean UI/body face.
+const geist = localFont({
+  src: "../../node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2",
+  weight: "100 900",
+  variable: "--nf-geist",
+  display: "swap",
+});
+// JetBrains Mono for every label, chip and terminal line.
+const mono = localFont({
+  src: "../../node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2",
+  weight: "100 800",
+  variable: "--nf-mono",
+  display: "swap",
+});
+// Instrument Serif italic for the accent words.
+const serif = localFont({
+  src: [
+    { path: "../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2", weight: "400", style: "italic" },
+  ],
   variable: "--nf-serif",
   display: "swap",
 });
@@ -72,7 +95,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geist.variable} ${geistMono.variable} ${serif.variable}`}
+      className={`${display.variable} ${geist.variable} ${mono.variable} ${serif.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: boot }} />

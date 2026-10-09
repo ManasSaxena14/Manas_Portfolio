@@ -9,8 +9,9 @@ Claude Design handoff in `design_handoff_portfolio/` (reference files in
 **Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 ·
 three.js + React Three Fiber · GSAP (ScrollTrigger, SplitText) · Framer Motion · Lenis.
 
-**Type:** Geist (variable weight) for display and UI, Geist Mono for labels,
-Instrument Serif *italic* for accent words.
+**Type:** Bricolage Grotesque (variable weight) for display, Geist for body/UI,
+JetBrains Mono for labels, Instrument Serif *italic* for accent words. All
+self-hosted from npm `@fontsource` packages — no Google Fonts request at build.
 
 **Colour:** zinc neutrals (`#09090b` base) with a single lime accent
 (`#c8f25a`). All tokens live at the top of `src/app/globals.css`; change

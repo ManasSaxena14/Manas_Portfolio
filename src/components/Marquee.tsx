@@ -116,7 +116,7 @@ export default function Marquee({
         ref={track}
         className={`flex w-max items-center whitespace-nowrap will-change-transform ${
           big
-            ? "text-[clamp(64px,11vw,180px)] leading-[1.02] font-semibold tracking-[-.045em]"
+            ? "font-display text-[clamp(64px,11vw,180px)] leading-[1.02] font-semibold tracking-[-.032em]"
             : "font-mono text-[12.5px] tracking-[.16em] text-muted uppercase"
         }`}
       >

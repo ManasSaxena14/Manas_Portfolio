@@ -24,6 +24,7 @@ export default function Work() {
     const shades = cards.map((c) => c.querySelector<HTMLElement>("[data-shade]"));
     const last = cards.map(() => -1);
     let tops: number[] = [];
+    let sts: number[] = cards.map((_, i) => 92 + i * 18);
     let H = window.innerHeight;
 
     // Where each card sits in the flow before it sticks. Summed from the
@@ -38,6 +39,15 @@ export default function Work() {
         y += c.offsetHeight + gap;
         return top;
       });
+      // A card taller than the screen must scroll fully into view before it
+      // pins, so its sticky top goes negative: it sticks only once its bottom
+      // edge is 24px above the bottom of the viewport. Nothing gets covered.
+      sts = cards.map((c, i) => {
+        const base = 92 + i * 18;
+        const st = mq.matches ? Math.min(base, H - c.offsetHeight - 24) : base;
+        c.style.setProperty("--st", `${Math.round(st)}px`);
+        return st;
+      });
     };
 
     const update = (y: number) => {
@@ -48,7 +58,7 @@ export default function Work() {
         // The next card's top in the viewport, while it slides up to stick.
         const t =
           mq.matches && i < cards.length - 1
-            ? clamp(1 - (tops[i + 1] - y - (92 + (i + 1) * 18)) / (H * 0.85)) // 92 + n·18 matches --st
+            ? clamp(1 - (tops[i + 1] - y - sts[i + 1]) / (H * 0.85))
             : 0;
         if (Math.abs(t - last[i]) < 1e-4) return;
         last[i] = t;
@@ -134,6 +144,16 @@ function ProjectCard({ p, i, total }: { p: Project; i: number; total: number }) 
             <span>{p.category}</span>
             <span className="ml-auto rounded-md border border-line px-2 py-0.5 text-[11px] text-dim">{p.period}</span>
           </div>
+          {p.highlight && (
+            <div data-ambient className="hl-badge self-start">
+              <svg viewBox="0 0 24 24" className="size-4 flex-none" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M8 4h8v5a4 4 0 0 1-8 0V4Z" />
+                <path d="M8 6H5v1.5A3 3 0 0 0 8 10.5M16 6h3v1.5a3 3 0 0 1-3 3M12 13v4M8.5 20h7M10 17h4" />
+              </svg>
+              <span>{p.highlight}</span>
+              <span aria-hidden className="hl-shine" />
+            </div>
+          )}
           <div>
             <SplitWords as="h3" text={p.title} className="display m-0 text-[clamp(38px,4.6vw,72px)] leading-[.95]" />
             <p className="mt-3.5 mb-0 max-w-[36ch] text-[clamp(18px,1.6vw,22px)] leading-[1.35] text-chip">
@@ -141,12 +161,33 @@ function ProjectCard({ p, i, total }: { p: Project; i: number; total: number }) 
             </p>
           </div>
           <p className="m-0 max-w-[58ch] text-[15.5px] leading-[1.6] text-muted">{p.description}</p>
+
+          {/* Key wins: three bold headlines, each with one line of proof */}
+          <ol data-reveal="stagger" className="m-0 flex list-none flex-col p-0">
+            {p.bullets.map((b, k) => (
+              <li
+                key={b.k}
+                style={{ "--i": k } as CSSProperties}
+                className="group/b relative grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 border-t border-line-soft py-3.5 last:border-b"
+              >
+                <span aria-hidden className="absolute top-[-1px] left-0 h-px w-0 bg-accent transition-[width] duration-700 ease-expo group-hover/b:w-full" />
+                <span className="pt-[3px] font-mono text-[11px] tracking-[.1em] text-accent">{pad(k + 1)}</span>
+                <span className="flex flex-col gap-1">
+                  <span className="font-display text-[clamp(17px,1.5vw,20px)] leading-[1.2] font-[640] tracking-[-.012em] text-ink transition-transform duration-500 ease-expo group-hover/b:translate-x-1">
+                    {b.k}
+                  </span>
+                  <span className="text-[14px] leading-[1.5] text-muted">{b.t}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+
           <div data-reveal="stagger" className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {p.features.map((f, k) => (
               <div
                 key={f.t}
                 style={{ "--i": k } as CSSProperties}
-                className="group/f flex flex-col gap-1 rounded-[12px] border border-line-soft bg-bg/50 px-3.5 py-3 transition-[border-color,background-color] duration-300 hover:border-accent/40 hover:bg-accent/[.04]"
+                className="group/f flex flex-col gap-1 rounded-[12px] border border-line-soft bg-[linear-gradient(160deg,rgb(255_255_255/.025),transparent)] px-3.5 py-3 transition-[border-color,background-color,transform] duration-500 ease-expo hover:-translate-y-0.5 hover:border-accent/40 hover:bg-accent/[.04]"
               >
                 <span className="flex items-center gap-2 font-mono text-[10.5px] tracking-[.12em] text-ink uppercase">
                   <span className="text-accent">{pad(k + 1)}</span>
@@ -156,14 +197,6 @@ function ProjectCard({ p, i, total }: { p: Project; i: number; total: number }) 
               </div>
             ))}
           </div>
-          <ul data-reveal="stagger" className="m-0 flex list-none flex-col gap-2.5 p-0">
-            {p.bullets.map((b, k) => (
-              <li key={b} className="group/b flex gap-3 text-[15px] leading-normal text-ink-2 transition-colors duration-500 hover:text-ink" style={{ "--i": k } as CSSProperties}>
-                <span className="mt-[.6em] size-1.5 flex-none bg-accent transition-transform duration-500 ease-expo group-hover/b:scale-150" />
-                <span>{b}</span>
-              </li>
-            ))}
-          </ul>
           <div className="mt-auto flex flex-col gap-3.5 pt-2">
             <div className="flex flex-wrap gap-2.5">
               {primary && (

@@ -44,6 +44,9 @@ export function Scene({ className, style, children }: { className?: string; styl
   return (
     <div ref={ref} data-scene className={`scene ${className ?? ""}`} style={style}>
       {children}
+      {/* Glass finish: a glare that follows the pointer and a slow light sweep. */}
+      <span aria-hidden className="scene-glare" />
+      <span aria-hidden className="scene-sheen" />
     </div>
   );
 }

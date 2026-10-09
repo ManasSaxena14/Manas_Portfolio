@@ -411,7 +411,7 @@ export default function Loader() {
                 {label}
               </span>
             </span>
-            <div className="ld-in ld-num flex items-start font-display text-[clamp(92px,17vw,264px)] leading-none font-[620] tracking-[-.05em] text-ink tabular-nums [animation-delay:.16s]">
+            <div className="ld-in ld-num flex items-start font-display text-[clamp(92px,17vw,264px)] leading-none font-[640] tracking-[-.035em] text-ink tabular-nums [animation-delay:.16s]">
               {[0, 1, 2].map((i) => (
                 <span
                   key={i}

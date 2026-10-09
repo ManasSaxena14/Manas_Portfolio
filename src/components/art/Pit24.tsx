@@ -118,7 +118,7 @@ export default function Pit24() {
           </g>
 
           {/* north arrow */}
-          <g transform="translate(1490 120)" stroke={W} strokeWidth="2" fill="none">
+          <g transform="translate(1486 186)" stroke={W} strokeWidth="2" fill="none">
             <circle r="34" strokeOpacity=".6" />
             <path d="M0 -26 L10 14 L0 6 L-10 14 Z" fill={W} />
             <text y="-42" textAnchor="middle" fill={W} stroke="none" fontSize="18">N</text>
@@ -126,8 +126,23 @@ export default function Pit24() {
         </svg>
       </Layer>
 
+      {/* Hackathon banner */}
+      <Layer d={1.1} className="top-[3.4%] left-[6%] right-[6%]">
+        <div className="relative flex items-center gap-[1.2cqw] overflow-hidden rounded-[.8cqw] border border-[#ff9f43]/70 bg-[linear-gradient(90deg,rgb(255_159_67/.28),rgb(255_159_67/.08)_60%,rgb(255_159_67/.2))] px-[1.4cqw] py-[.7cqw] shadow-[0_0_3cqw_-.4cqw_rgb(255_159_67/.55)]">
+          <svg viewBox="0 0 24 24" className="size-[2.2cqw] flex-none text-[#ffb36b]" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <path d="M8 4h8v5a4 4 0 0 1-8 0V4Z" />
+            <path d="M8 6H5v1.5A3 3 0 0 0 8 10.5M16 6h3v1.5a3 3 0 0 1-3 3M12 13v4M8.5 20h7M10 17h4" />
+          </svg>
+          <span className="font-mono text-[1.15cqw] font-[600] tracking-[.2em] text-[#ffd9b0] uppercase">National hackathon</span>
+          <span className="h-[1.4cqw] w-px bg-[#ff9f43]/60" />
+          <span className="font-display text-[1.5cqw] leading-none font-[700] tracking-[-.01em] text-[#fff4e6]">Cars24 Car-a-thon 2026</span>
+          <span className="ml-auto rounded-full bg-[#ff9f43] px-[1.1cqw] py-[.3cqw] font-mono text-[1.05cqw] font-[700] tracking-[.12em] text-[#0a3462] uppercase">Top 20</span>
+          <span className="pa-banner-shine pointer-events-none absolute inset-y-0 -left-[30%] w-[30%] bg-[linear-gradient(105deg,transparent,rgb(255_255_255/.35),transparent)]" />
+        </div>
+      </Layer>
+
       {/* Title */}
-      <Layer d={1.3} className="top-[7.5%] left-[6%]">
+      <Layer d={1.3} className="top-[14.5%] left-[6%]">
         <div className="font-display text-[4.4cqw] leading-none font-[760] tracking-[-.04em] text-[#ff9f43]">PIT-24</div>
         <div className="mt-[.7cqw] font-mono text-[1.15cqw] tracking-[.16em] text-[#e8f1ff]/75 uppercase">Tier 1 · 8 stations · 16 people</div>
       </Layer>
@@ -151,7 +166,7 @@ export default function Pit24() {
       </Layer>
 
       {/* Stamp */}
-      <Layer d={2.4} className="top-[13%] right-[23%]">
+      <Layer d={2.4} className="top-[13.5%] left-[40%]">
         <div className="pa-stamp rotate-[-11deg] rounded-[.8cqw] border-[.28cqw] border-[#ff9f43] p-[.35cqw] text-[#ff9f43]">
           <div className="rounded-[.5cqw] border-[.14cqw] border-[#ff9f43] px-[1.5cqw] py-[.6cqw] text-center">
             <div className="font-display text-[3cqw] leading-none font-[800] tracking-[-.02em]">TOP 20</div>

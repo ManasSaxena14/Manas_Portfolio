@@ -36,31 +36,50 @@ export default function Rhomis() {
       <Layer d={0.2} className="inset-0">
         <span className="absolute inset-0 bg-[radial-gradient(130%_100%_at_45%_35%,transparent_55%,rgb(120_96_60/.22))]" />
         <span className="absolute inset-0 [background-image:linear-gradient(rgb(23_21_18/.045)_1px,transparent_1px)] [background-size:100%_2.5cqw]" />
+        <span className="paper-grain absolute inset-0" />
+        {/* a fold crease across the sheet */}
+        <span className="absolute inset-0 bg-[linear-gradient(112deg,transparent_47.6%,rgb(80_60_30/.08)_49.6%,rgb(255_255_255/.2)_50.2%,transparent_53%)]" />
       </Layer>
 
       {/* The world */}
       <Layer d={0.9} className="top-[27%] left-[-1%] w-[102%]">
+        {/* an ink scanner sweeping the survey */}
+        <span className="pa-scan-x pointer-events-none absolute inset-y-[-2%] left-0 w-[5%] bg-[linear-gradient(90deg,transparent,rgb(198_61_43/.07),rgb(198_61_43/.15)_50%,transparent)]" />
         <svg viewBox={`0 0 ${MAP.w} ${MAP.h}`} className="block w-full overflow-visible" aria-hidden>
           <path d={WORLD_DOTS} stroke={INK} strokeOpacity=".24" strokeWidth="6.4" strokeLinecap="round" fill="none" />
           {SITES.map(([lon, lat, v], i) => {
             const [x, y] = project(lon, lat);
             return (
-              <circle
-                key={i}
-                cx={x}
-                cy={y}
-                r={7 + v * 0.26}
-                fill={RED}
-                fillOpacity={0.18 + v / 180}
-                stroke={RED}
-                strokeOpacity=".8"
-                strokeWidth="1.5"
-                className="pa-pop"
-                style={{ animationDelay: `${0.4 + i * 0.05}s` }}
-              />
+              <g key={i} className="pa-breathe" style={{ animationDelay: `${-(i * 0.37) % 4}s` }}>
+                <circle
+                  cx={x}
+                  cy={y}
+                  r={7 + v * 0.26}
+                  fill={RED}
+                  fillOpacity={0.18 + v / 180}
+                  stroke={RED}
+                  strokeOpacity=".8"
+                  strokeWidth="1.5"
+                  className="pa-pop"
+                  style={{ animationDelay: `${0.4 + i * 0.05}s` }}
+                />
+              </g>
+            );
+          })}
+          {/* shortage flowing out from the worst-hit site */}
+          {([[79, 22], [-1.6, 12.3], [34.2, -13.4], [-75, -9.3]] as [number, number][]).map(([lon, lat], i) => {
+            const [x2, y2] = project(lon, lat);
+            const mx = (drcX + x2) / 2;
+            const my = Math.min(drcY, y2) - Math.abs(x2 - drcX) * 0.28 - 30;
+            return (
+              <path key={`a${i}`} d={`M${drcX} ${drcY} Q${Math.round(mx)} ${Math.round(my)} ${x2} ${y2}`} stroke={RED} strokeOpacity=".5" strokeWidth="2.2" strokeDasharray="7 9" fill="none" strokeLinecap="round" className="pa-dash" style={{ animationDelay: `${-i * 0.3}s` }} />
             );
           })}
           <circle cx={drcX} cy={drcY} r="30" fill="none" stroke={RED} strokeWidth="2.5" className="pa-ping" />
+          {SITES.filter(([, , v]) => v >= 69 && v < 90).map(([lon, lat], i) => {
+            const [x, y] = project(lon, lat);
+            return <circle key={`p${i}`} cx={x} cy={y} r="22" fill="none" stroke={RED} strokeWidth="2" className="pa-ping" style={{ animationDelay: `${-i * 0.45}s` }} />;
+          })}
           {/* call-outs */}
           <path d={`M${drcX - 28} ${drcY + 16} L${drcX - 120} ${drcY + 96} H${drcX - 300}`} stroke={INK} strokeWidth="2" fill="none" />
           <text x={drcX - 128} y={drcY + 84} textAnchor="end" fill={INK} fontSize="30" fontWeight="700" style={{ fontFamily: "var(--font-display)" }}>
@@ -83,6 +102,24 @@ export default function Rhomis() {
           Who goes <em className="text-[#c63d2b]">hungry</em>,
           <br />
           and why?
+        </div>
+      </Layer>
+
+      {/* Newsroom ticker */}
+      <Layer d={0.4} className="inset-x-0 bottom-0 h-[3cqw]">
+        <div className="size-full overflow-hidden bg-[#171512] text-[#ebe4d3]">
+          <div className="pa-tick flex h-full w-max items-center whitespace-nowrap font-mono text-[1cqw] tracking-[.18em] uppercase">
+            {[0, 1].map((k) => (
+              <span key={k} className="flex items-center">
+                {["54,873 households", "35 countries", "46 indicators", "67.7% face a shortage", "live on Tableau Public"].map((t) => (
+                  <span key={t} className="flex items-center">
+                    <span className="px-[2.4cqw]">{t}</span>
+                    <i className="size-[.6cqw] rotate-45 bg-[#c63d2b]" />
+                  </span>
+                ))}
+              </span>
+            ))}
+          </div>
         </div>
       </Layer>
 
@@ -129,8 +166,8 @@ export default function Rhomis() {
               <div key={b.q} className="grid grid-cols-[2.6cqw_1fr] items-center gap-[.6cqw]">
                 <span className="font-mono text-[1cqw]">{b.q}</span>
                 <span className="flex flex-col gap-[.25cqw]">
-                  <span className="pa-grow block h-[.9cqw] origin-left" style={{ width: `${b.a}%`, background: OLIVE, animationDelay: `${0.5 + i * 0.1}s` }} />
-                  <span className="pa-grow block h-[.9cqw] origin-left" style={{ width: `${b.b}%`, background: RED, animationDelay: `${0.56 + i * 0.1}s` }} />
+                  <span className="pa-grow-loop block h-[.9cqw]" style={{ width: `${b.a}%`, background: OLIVE, animationDelay: `${0.5 + i * 0.12}s` }} />
+                  <span className="pa-grow-loop block h-[.9cqw]" style={{ width: `${b.b}%`, background: RED, animationDelay: `${0.62 + i * 0.12}s` }} />
                 </span>
               </div>
             ))}

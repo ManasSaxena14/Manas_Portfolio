@@ -29,7 +29,7 @@ export type Project = {
   title: string;
   tagline: string;
   description: string;
-  bullets: string[];
+  bullets: { k: string; t: string }[]; // bold lead-in + supporting detail
   stack: string[];
   metrics: Metric[];
   links: Link[]; // first link is the primary action (and the image link)
@@ -38,6 +38,7 @@ export type Project = {
   features: { t: string; d: string }[]; // four highlights shown as tiles
   art: "aura" | "finsight" | "rhomis" | "bidverse" | "pit24"; // illustrated preview
   imageLabel: string;
+  highlight?: string; // optional award / recognition pill shown above the title
 };
 
 export type ExperienceItem = {
@@ -218,11 +219,11 @@ export const portfolio: Portfolio = {
         title: "Aura Roast",
         tagline: "Specialty coffee — ordered, tracked live and recommended by an AI barista.",
         description:
-          "A production-grade, server-rendered ordering platform for a specialty-coffee brand: order, track your cup live on a map, reserve a table, earn loyalty points and chat with an AI barista — across 12 cafés in 6 cities.",
+          "Production ordering platform for a specialty-coffee brand: order, track your cup live, book a table and earn loyalty points across 12 cafés in 6 cities.",
         bullets: [
-          "Stateless serverless architecture with a write-through Neon Postgres layer via Drizzle ORM — zero data loss across cold starts under concurrent load",
-          "AI barista on Groq LLaMA 3.3-70B with live catalogue tool-calling for recommendations and cart additions, with a graceful local fallback",
-          "Idempotency-keyed order pipeline, server-owned pricing and atomic seat booking — duplicate orders and overbooking are impossible by design",
+          { k: "Zero data loss", t: "across serverless cold starts — write-through Neon Postgres via Drizzle ORM" },
+          { k: "Tool-calling AI barista", t: "on Groq LLaMA 3.3-70B that searches the menu and fills the cart" },
+          { k: "Duplicate orders impossible", t: "idempotency keys, server-owned pricing and atomic seat booking" },
         ],
         stack: ["Next.js 16", "TypeScript", "Neon Postgres", "Drizzle ORM", "NextAuth v5", "Groq (LLaMA 3.3)", "Zod", "Vercel"],
         metrics: [
@@ -247,36 +248,36 @@ export const portfolio: Portfolio = {
       },
       {
         category: "AI · FinTech",
-        period: "Feb 2026",
+        period: "Oct 2026",
         title: "FinSight AI",
-        tagline: "A finance app that tells you what you will spend, not just what you spent.",
+        tagline: "A finance app that tells you what you will spend — and what to do about it.",
         description:
-          "An end-to-end financial analytics and advisory platform: it forecasts expenses, flags unusual spending before it becomes a problem and answers money questions through a context-aware AI advisor.",
+          "Turns your own transactions into forecasts, risk and anomaly alerts, then pairs them with a tool-using AI advisor that explains every number and cites its sources.",
         bullets: [
-          "Isolation Forest and Z-score anomaly detection across 8,000+ transactions, surfaced through interactive drill-down dashboards",
-          "Scikit-learn forecasting for 1–12 month, per-category expense projections that improve budgeting accuracy",
-          "Groq Llama 3 advisor that reads the model output and responds in under 100ms, plus a 0–100 financial health score and peer benchmarking",
+          { k: "14-tool AI agent with RAG", t: "streams answers with inline citations — numbers come from models, never the LLM" },
+          { k: "Forecasts with 80% intervals", t: "damped Holt per category, backtested, plus Monte Carlo goal odds over 4,000 paths" },
+          { k: "Add spends by voice, receipt or SMS", t: "Whisper, a vision model and statement parsing — in English, Hindi or Hinglish" },
         ],
-        stack: ["React.js", "FastAPI", "MongoDB Atlas", "Groq (Llama 3)", "Scikit-learn", "Recharts", "Tailwind CSS"],
+        stack: ["React", "FastAPI", "MongoDB Atlas", "Groq (gpt-oss-120b)", "Scikit-learn", "Whisper", "three.js", "GSAP"],
         metrics: [
-          { v: "8,000+", l: "transactions" },
-          { v: "12 mo", l: "forecast horizon" },
-          { v: "<100ms", l: "AI advice" },
+          { v: "14", l: "agent tools" },
+          { v: "96.7%", l: "retrieval hit@1" },
+          { v: "92", l: "backend tests" },
         ],
         links: [
-          { label: "Live demo", href: "https://finsight-ai-intelligent-financial.vercel.app/" },
+          { label: "Live demo", href: "https://fin-sight-ai-intelligent-financial.vercel.app/" },
           { label: "Source", href: `${GITHUB}/FinSight-AI-Intelligent-Financial-Forecasting-Advisory-System` },
         ],
         note: "Backend runs on Render's free tier — the first request can take ~30s to wake.",
-        role: "Solo build — ML models, FastAPI backend and React dashboards",
+        role: "Solo build — ML models, AI agent, FastAPI backend and React UI",
         features: [
-          { t: "Forecasting", d: "Per-category projections 1–12 months ahead" },
-          { t: "Anomaly alerts", d: "Z-score + Isolation Forest flag unusual spends" },
-          { t: "Health score", d: "A 0–100 score of financial stability" },
-          { t: "Peer benchmark", d: "Percentile comparison with your income bracket" },
+          { t: "AI advisor", d: "Tool-calling agent with RAG and user-confirmed actions" },
+          { t: "Forecasting", d: "1–12 month per-category spend with prediction intervals" },
+          { t: "Anomaly alerts", d: "Robust z-score + Isolation Forest vs your own baseline" },
+          { t: "Goal planner", d: "Monte Carlo odds of hitting each savings goal on time" },
         ],
         art: "finsight",
-        imageLabel: "finsight-ai.vercel.app",
+        imageLabel: "fin-sight-ai-intelligent-financial.vercel.app",
       },
       {
         category: "Data Analytics · Visualisation",
@@ -284,11 +285,11 @@ export const portfolio: Portfolio = {
         title: "RHoMIS Analytics",
         tagline: "54,873 farming households, one question: who goes hungry, and why?",
         description:
-          "A data-visualisation capstone on the Rural Household Multi-Indicator Survey: raw survey data from 35 countries turned into food-security intelligence for policymakers, published as an interactive Tableau dashboard.",
+          "A data-visualisation capstone on the Rural Household Multi-Indicator Survey: raw data from 35 countries turned into food-security intelligence for policymakers.",
         bullets: [
-          "Python ETL pipelines turning 54,873 records × 1,599 survey variables into 46 standardised indicators and 7 food-security KPIs",
-          "K-means clustering and logistic regression to segment households by socioeconomic profile and find the drivers of food shortage",
-          "Multi-view Tableau dashboard that pinpoints 14,330 vulnerable households for targeted intervention",
+          { k: "1,599 variables → 46 indicators", t: "Python ETL across 54,873 survey records and 7 food-security KPIs" },
+          { k: "Drivers of hunger, quantified", t: "K-means segmentation and logistic regression on household profiles" },
+          { k: "14,330 vulnerable households", t: "pinpointed for intervention in a multi-view Tableau dashboard" },
         ],
         stack: ["Python", "Pandas", "Scikit-learn", "Statsmodels", "Tableau", "SQL", "LaTeX"],
         metrics: [
@@ -316,17 +317,17 @@ export const portfolio: Portfolio = {
       },
       {
         category: "Full-Stack · Real-Time",
-        period: "Oct 2025",
+        period: "Oct 2026",
         title: "BidVerse",
         tagline: "An auction house that stays fair when everyone bids at once.",
         description:
-          "A premium auction platform covering the full lifecycle — listing, live competitive bidding and automated commission settlement — with an AI concierge, XP-based gamification and a superadmin governance dashboard.",
+          "A premium auction platform covering the full lifecycle — listing, live competitive bidding and automated commission settlement — on a security-hardened MERN stack.",
         bullets: [
-          "Live bid synchronisation with strict server-side validation — no race conditions under peak, high-frequency concurrent bidding",
-          "Three-tier RBAC with automated commission settlement, audit logging and JWT-secured, Bcrypt-encrypted authentication",
-          "AI concierge on Groq Llama 3.3 70B, plus a 6-tier XP system, 8 achievement badges and an animated leaderboard",
+          { k: "Race-free bidding", t: "server-side validation, idempotent bid upserts and auto-expiring lots" },
+          { k: "Commission engine", t: "settles closed auctions automatically — pending → paid, duplicate-proof" },
+          { k: "5 security layers", t: "JWT + 3-tier RBAC, Helmet, per-route rate limits and input validation" },
         ],
-        stack: ["MongoDB", "Express", "React", "Node.js", "Groq (Llama 3.3)", "Framer Motion", "JWT", "Recharts"],
+        stack: ["MongoDB", "Express", "React", "Node.js", "Groq (Llama 3.3)", "GSAP", "three.js", "Recharts"],
         metrics: [
           { v: "30+", l: "API endpoints" },
           { v: "3", l: "access tiers" },
@@ -341,8 +342,8 @@ export const portfolio: Portfolio = {
         features: [
           { t: "Live bidding", d: "Server-validated bids with countdown timers" },
           { t: "Commissions", d: "Automatic settlement, payouts and audit trail" },
-          { t: "Gamification", d: "XP levels, 8 badges and a podium leaderboard" },
-          { t: "Governance", d: "Superadmin analytics, roles and suspensions" },
+          { t: "AI concierge", d: "Groq Llama 3.3 70B with a luxury-house persona" },
+          { t: "Governance", d: "Superadmin analytics, revenue trends, roles and suspensions" },
         ],
         art: "bidverse",
         imageLabel: "bidverse-auction-platform.vercel.app",
@@ -355,9 +356,9 @@ export const portfolio: Portfolio = {
         description:
           "My concept for the Cars24 Car-a-thon 2026 national hackathon: used-car cleaning re-imagined as a pit-lane assembly line, backed by a solution deep-dive and an interactive simulation of throughput, crew and cost per car.",
         bullets: [
-          "Eight stations across fifty metres: each car is worked on for six minutes by twelve people and three machines, yet one leaves every 24 seconds",
-          "Interactive line simulation reporting takt time (P50 / P90), first-pass clean score, labour minutes, water and ₹ per car",
-          "Scenario controls for arrival rate, crew variability, heavy-soil share and deployment tier — placed top 20 nationally",
+          { k: "One car every 24 seconds", t: "eight stations over 50 m — each car gets six minutes of work" },
+          { k: "Interactive line simulation", t: "takt P50 / P90, clean score, labour, water and ₹ per car" },
+          { k: "Top 20 nationally", t: "scenario controls for arrivals, crew variability and soil mix" },
         ],
         stack: ["Process design", "Line simulation", "Cost modelling", "Data visualisation", "Vercel"],
         metrics: [
@@ -379,6 +380,7 @@ export const portfolio: Portfolio = {
         ],
         art: "pit24",
         imageLabel: "pit24-simulation.vercel.app",
+        highlight: "Top 20 nationally · Cars24 Car-a-thon 2026",
       },
     ],
   },

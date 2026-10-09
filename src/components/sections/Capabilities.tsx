@@ -219,7 +219,7 @@ export default function Capabilities() {
                       >
                         <span className="font-mono text-xs text-accent">{pad(i + 1)}</span>
                         <span
-                          className="flex-1 font-display text-[clamp(22px,2.1vw,32px)] leading-[1.1] font-[560] tracking-[-.03em] [font-stretch:104%] transition-[color,transform] duration-500 ease-expo"
+                          className="flex-1 font-display text-[clamp(22px,2.1vw,32px)] leading-[1.1] font-[600] tracking-[-.02em] transition-[color,transform] duration-500 ease-expo"
                           style={{
                             color: on ? "var(--color-ink)" : i < idx ? "var(--color-dim)" : "#52525b",
                             transform: on ? "translateX(10px)" : "none",

@@ -45,6 +45,7 @@ export default function Highlights() {
               )}
               <span
                 aria-hidden
+                data-drift
                 className="pointer-events-none absolute -right-2 -bottom-6 font-serif text-[120px] leading-none text-transparent italic opacity-40 transition-opacity duration-500 [-webkit-text-stroke:1px_var(--color-line-strong)] group-hover:opacity-80"
               >
                 {pad(i + 1)}

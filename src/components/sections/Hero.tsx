@@ -20,8 +20,8 @@ const HeroGalaxy = memo(dynamic(() => import("@/components/three/HeroGalaxy"), {
 const { firstName, lastName, roles, tagline, status, location, stack } = portfolio;
 
 // Geist weight for the first name: at rest → directly under the cursor.
-const REST = 700;
-const PEAK = 900;
+const REST = 640;
+const PEAK = 800;
 const REST_FVS = `"wght" ${REST}`;
 const ACCENT = "#c8f25a";
 
@@ -356,6 +356,11 @@ export default function Hero() {
     input.current.mx = ((e.clientX - r.left) / r.width) * 2 - 1;
     input.current.my = -(((e.clientY - r.top) / r.height) * 2 - 1);
     input.current.mOn = 1;
+    // Depth: the two name lines drift apart against the pointer (CSS vars).
+    if (window.innerWidth >= 1080 && !reduce) {
+      el.style.setProperty("--hx", input.current.mx.toFixed(3));
+      el.style.setProperty("--hy", input.current.my.toFixed(3));
+    }
     if (glow.current && window.innerWidth >= 1080)
       glow.current.style.transform = `translate(${e.clientX - r.left - r.width / 2}px, ${e.clientY - r.top - r.height * 0.45}px)`;
   };
@@ -452,9 +457,9 @@ export default function Hero() {
                 fontVariationSettings: REST_FVS,
                 fontSize: "calc(clamp(64px, min(22vw, 22.5svh), 240px) * var(--fit, 1))",
               }}
-              className="block pb-[.04em] font-display leading-[.86] tracking-[-.065em] whitespace-nowrap [clip-path:inset(-100%_-40%_0_-40%)]"
+              className="block pb-[.04em] font-display leading-[.86] tracking-[-.045em] whitespace-nowrap [clip-path:inset(-100%_-40%_0_-40%)]"
             >
-              <span data-measure className="inline-block">
+              <span data-measure className="hero-depth-a inline-block">
                 <Letters text={firstName} />
               </span>
             </span>
@@ -464,7 +469,7 @@ export default function Hero() {
               style={{ fontSize: "calc(clamp(72px, min(24.5vw, 25svh), 264px) * var(--fit, 1))" }}
               className="name-last -mt-[.06em] block pr-[.06em] pb-[.14em] text-right font-serif leading-[.86] tracking-[-.02em] whitespace-nowrap italic [clip-path:inset(-100%_-40%_0_-40%)]"
             >
-              <span data-measure className="inline-block">
+              <span data-measure className="hero-depth-b inline-block">
                 <Letters text={lastName} />
               </span>
             </span>
@@ -472,7 +477,7 @@ export default function Hero() {
 
           <div
             data-hero-details
-            className="relative grid grid-cols-1 items-end gap-x-[clamp(24px,4vw,64px)] gap-y-7 pt-[clamp(20px,2.5vw,32px)] md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:grid-cols-[minmax(0,.8fr)_minmax(0,1.2fr)_minmax(0,1fr)]"
+            className="relative grid grid-cols-1 items-stretch gap-x-[clamp(24px,4vw,64px)] gap-y-7 pt-[clamp(28px,3vw,40px)] md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:grid-cols-[minmax(0,.8fr)_minmax(0,1.2fr)_minmax(0,1fr)]"
           >
             {/* Divider draws in from the left */}
             <span
@@ -480,7 +485,8 @@ export default function Hero() {
               data-hero-rule
               className="absolute top-0 right-0 left-0 h-px origin-left bg-linear-to-r from-accent/70 via-line to-line"
             />
-            <ul className="m-0 flex list-none flex-col gap-2 self-start p-0 font-mono text-[13px] tracking-[.1em] uppercase">
+            <span aria-hidden className="hero-rule-pulse" />
+            <ul className="m-0 flex list-none flex-col gap-2.5 p-0 pt-1 font-mono text-[13px] tracking-[.1em] uppercase">
               {roles.map((r, i) => (
                 <li key={r} data-hero-in data-hero-role className="flex items-center gap-3">
                   <span className="size-1.5 shrink-0 bg-accent" />
@@ -489,10 +495,10 @@ export default function Hero() {
               ))}
             </ul>
 
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col justify-between gap-6">
               <Stream text={tagline} play={heroIn} delay={950} />
               <div className="flex flex-wrap gap-3">
-                <span data-hero-in data-hero-cta className="inline-block">
+                <span data-hero-in data-hero-cta className="hero-cta-glow relative inline-block">
                   <a href="#work" data-magnetic className="btn btn-primary">
                     <RollLabel text="Explore work" />
                     <Arrow dir="down" />
@@ -507,8 +513,10 @@ export default function Hero() {
               </div>
             </div>
 
-            <div data-hero-in data-hero-term className="hidden justify-end lg:flex">
-              <Terminal play={heroIn && active} />
+            <div data-hero-in data-hero-term className="hidden items-start justify-end lg:flex">
+              <div className="hero-term-ring relative w-full max-w-[440px] rounded-[15px] p-px">
+                <Terminal play={heroIn && active} />
+              </div>
             </div>
           </div>
         </div>

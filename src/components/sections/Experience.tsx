@@ -72,7 +72,7 @@ export default function Experience() {
   );
 
   return (
-    <section ref={section} id="experience" className="sec-pad relative">
+    <section ref={section} id="experience" className="sec-pad relative overflow-x-clip">
       <div className="wrap">
         <SectionHeader eyebrow={eyebrow} index="(03)" />
         <SplitWords text={heading} className="h2 max-w-[14ch]" />
@@ -109,6 +109,7 @@ export default function Experience() {
                 >
                   <span
                     aria-hidden
+                    data-drift
                     className="pointer-events-none absolute -top-4 right-4 font-serif text-[clamp(96px,10vw,150px)] leading-none text-transparent italic opacity-50 transition-opacity duration-500 select-none [-webkit-text-stroke:1px_var(--color-line-strong)] group-hover/xp:opacity-90"
                   >
                     {pad(i + 1)}

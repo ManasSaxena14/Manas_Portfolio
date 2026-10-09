@@ -1,10 +1,11 @@
 import { fullName, portfolio } from "@/data/portfolio";
 
-// "MS" drawn as a circuit trace: a deep-V M and an angular S with chamfered
-// corners, ending in a lime node, like a signal reaching its output.
-// Drawn as one path so the draw-in and the hover pulse run M → S.
-export const TRACE = "M7 36V13L14 25L21 13V36M27 36H38L41 33V27.5L38 24.5H30L27 21.5V16L30 13H38";
-export const NODE = { cx: 40.9, cy: 13, r: 3.3 };
+// "MS" as one continuous monoline: the M's rounded arches run straight into
+// the S, which ends in a lime node. One path, so the draw-in and the hover
+// pulse travel M → S.
+export const TRACE =
+  "M5.5 36V15A3 3 0 0 1 10.9 13.2L14.25 19.6L17.6 13.2A3 3 0 0 1 23 15V36H33A5.5 6 0 0 0 33 24H31.5A5.5 6 0 0 1 31.5 12H40.5";
+export const NODE = { cx: 40.5, cy: 12, r: 3.1 };
 
 /**
  * The MS monogram. The trace draws itself in on load and the node lights
@@ -15,21 +16,22 @@ export function Mark({ size = 40, framed = true }: { size?: number; framed?: boo
     <span
       className={`mark relative grid shrink-0 place-items-center overflow-hidden ${
         framed
-          ? "rounded-[12px] border border-line bg-[linear-gradient(150deg,#1b1b1e,#0b0b0d)] shadow-[inset_0_1px_0_rgb(255_255_255/.07)] transition-[border-color,box-shadow] duration-500 group-hover:border-accent/50 group-hover:shadow-[inset_0_1px_0_rgb(255_255_255/.08),0_0_26px_-8px_color-mix(in_srgb,var(--color-accent)_60%,transparent)]"
+          ? "rounded-[30%] shadow-[0_8px_24px_-12px_rgb(0_0_0/.9)] transition-shadow duration-500 group-hover:shadow-[0_0_30px_-8px_color-mix(in_srgb,var(--color-accent)_65%,transparent)]"
           : ""
       }`}
       style={{ width: size, height: size }}
     >
-      {/* Faint dot grid: the "circuit board" the trace is etched into */}
+      {/* Frame: a slowly turning light runs around a hairline border, over a
+          glassy dark tile. The ring rotates (compositor only); the tile
+          covers all but its edge. */}
       {framed && (
-        <span
-          aria-hidden
-          className="absolute inset-0 opacity-60"
-          style={{
-            backgroundImage: "radial-gradient(rgb(255 255 255 / .07) .6px, transparent .8px)",
-            backgroundSize: `${size / 6}px ${size / 6}px`,
-          }}
-        />
+        <>
+          <span aria-hidden className="mark-ring absolute -inset-1/2" />
+          <span
+            aria-hidden
+            className="absolute inset-px rounded-[inherit] bg-[radial-gradient(120%_90%_at_30%_0%,#232328,#0c0c0e_70%)] shadow-[inset_0_1px_0_rgb(255_255_255/.09)]"
+          />
+        </>
       )}
       <span className="relative block" style={{ width: size * 0.82, height: size * 0.82 }}>
         <svg viewBox="0 0 48 48" width={size * 0.82} height={size * 0.82} aria-hidden className="block overflow-visible">
@@ -38,7 +40,7 @@ export function Mark({ size = 40, framed = true }: { size?: number; framed?: boo
             pathLength={100}
             fill="none"
             stroke="var(--color-ink)"
-            strokeWidth={3.3}
+            strokeWidth={3}
             strokeLinecap="round"
             strokeLinejoin="round"
             className="mark-trace"
@@ -48,7 +50,7 @@ export function Mark({ size = 40, framed = true }: { size?: number; framed?: boo
             pathLength={100}
             fill="none"
             stroke="var(--color-accent)"
-            strokeWidth={3.3}
+            strokeWidth={3}
             strokeLinecap="round"
             strokeLinejoin="round"
             className="mark-pulse"
@@ -81,7 +83,7 @@ export default function Logo() {
     <a href="#top" aria-label={`${fullName} — back to top`} className="group flex items-center gap-3 no-underline">
       <Mark />
       <span className="hidden flex-col leading-[1.25] md:flex">
-        <span className="text-[15px] font-[650] tracking-[-.02em] text-ink">{fullName}</span>
+        <span className="font-display text-[16px] font-[640] tracking-[-.015em] text-ink">{fullName}</span>
         <span className="font-mono text-[9.5px] tracking-[.16em] text-dim uppercase transition-colors duration-300 group-hover:text-accent">
           AI · {bottom}
         </span>

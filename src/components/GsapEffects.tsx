@@ -6,6 +6,7 @@ import { gsap, MOTION_OK, ScrollTrigger, SplitText, useGSAP } from "@/lib/gsap";
  * Page-wide GSAP scroll effects, driven by data attributes so sections
  * stay declarative:
  *   [data-parallax]       image drifts inside its frame
+ *   [data-drift]          outlined numerals float against the scroll
  *   [data-gsap-read]      paragraph words brighten as you read down
  *   [data-gsap-cards]     child cards flip up in a stagger
  *   [data-gsap-band]      manifesto rows tilt and slide into place
@@ -26,6 +27,18 @@ export default function GsapEffects() {
             scale: 1.06,
             ease: "none",
             scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: true },
+          },
+        );
+      });
+
+      gsap.utils.toArray<HTMLElement>("[data-drift]").forEach((el) => {
+        gsap.fromTo(
+          el,
+          { yPercent: -14 },
+          {
+            yPercent: 14,
+            ease: "none",
+            scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: 0.8 },
           },
         );
       });
