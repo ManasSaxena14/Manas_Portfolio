@@ -23,7 +23,21 @@ export type ProcessStep = {
   figure: string; // readout shown in the 3D figure's corner
 };
 
+export type PathId = "dev" | "ai" | "data";
+
+export type WorkPath = {
+  id: PathId;
+  index: string; // "01"
+  label: string; // short tab label
+  title: string; // card heading, *accent* markup
+  blurb: string;
+  tags: string[];
+  hue: string; // the path's signal colour
+  cmd: string; // the "command" shown on the path card
+};
+
 export type Project = {
+  path: PathId;
   category: string;
   period: string;
   title: string;
@@ -36,7 +50,7 @@ export type Project = {
   note: string;
   role: string;
   features: { t: string; d: string }[]; // four highlights shown as tiles
-  art: "aura" | "finsight" | "rhomis" | "bidverse" | "pit24"; // illustrated preview
+  art: "aura" | "finsight" | "rhomis" | "bidverse" | "pit24" | "orbyt"; // illustrated preview
   imageLabel: string;
   highlight?: string; // optional award / recognition pill shown above the title
 };
@@ -93,11 +107,12 @@ export type Portfolio = {
   nav: NavLink[];
   socials: Social[];
   process: { eyebrow: string; heading: string; skipLabel: string; steps: ProcessStep[] };
-  work: { eyebrow: string; heading: string; projects: Project[] };
+  work: { eyebrow: string; heading: string; intro: string; paths: WorkPath[]; projects: Project[] };
   experience: { eyebrow: string; heading: string; items: ExperienceItem[] };
   highlights: {
     eyebrow: string;
     heading: string;
+    featured: Highlight & { metrics: Metric[] }; // the hackathon, shown wide with its scene
     items: Highlight[];
     profiles: { label: string; stat: string; href: string }[];
   };
@@ -211,9 +226,43 @@ export const portfolio: Portfolio = {
 
   work: {
     eyebrow: "Featured Work",
-    heading: "Five builds, each proving a *different discipline.*",
+    heading: "Three disciplines. *Pick a path.*",
+    intro: "Every build below ships to production, grouped by the craft it proves. Choose a path to walk through its projects.",
+    paths: [
+      {
+        id: "dev",
+        index: "01",
+        label: "Software Dev",
+        title: "Software *Development*",
+        blurb: "Concurrency-safe backends, typed APIs and systems designed to survive real traffic.",
+        tags: ["System Design", "Next.js", "Node.js", "PostgreSQL", "Redis", "TypeScript"],
+        hue: "#c8f25a",
+        cmd: "deploy --prod",
+      },
+      {
+        id: "ai",
+        index: "02",
+        label: "AI / ML",
+        title: "AI & *Machine Learning*",
+        blurb: "Forecasting models and tool-using agents where every number is computed, never invented.",
+        tags: ["LLM agents", "RAG", "Scikit-learn", "Forecasting", "FastAPI"],
+        hue: "#7dd3fc",
+        cmd: "model.fit()",
+      },
+      {
+        id: "data",
+        index: "03",
+        label: "Data Analysis",
+        title: "Data *Analysis*",
+        blurb: "Raw survey dumps turned into indicators, statistics and dashboards people act on.",
+        tags: ["Python ETL", "Pandas", "Statistics", "Tableau", "SQL"],
+        hue: "#f5b26b",
+        cmd: "etl --publish",
+      },
+    ],
     projects: [
       {
+        path: "dev",
         category: "Full-Stack · AI Commerce",
         period: "Sep 2026",
         title: "Aura Roast",
@@ -247,6 +296,7 @@ export const portfolio: Portfolio = {
         imageLabel: "aura-roast-seven.vercel.app",
       },
       {
+        path: "ai",
         category: "AI · FinTech",
         period: "Oct 2026",
         title: "FinSight AI",
@@ -280,6 +330,7 @@ export const portfolio: Portfolio = {
         imageLabel: "fin-sight-ai-intelligent-financial.vercel.app",
       },
       {
+        path: "data",
         category: "Data Analytics · Visualisation",
         period: "2025",
         title: "RHoMIS Analytics",
@@ -316,6 +367,7 @@ export const portfolio: Portfolio = {
         imageLabel: "tableau public dashboard",
       },
       {
+        path: "dev",
         category: "Full-Stack · Real-Time",
         period: "Oct 2026",
         title: "BidVerse",
@@ -349,38 +401,38 @@ export const portfolio: Portfolio = {
         imageLabel: "bidverse-auction-platform.vercel.app",
       },
       {
-        category: "Hackathon · Operations Design",
-        period: "2026",
-        title: "PIT-24",
-        tagline: "A cleaning line, not a cleaning bay — top 20 nationally at the Cars24 Car-a-thon.",
+        path: "dev",
+        category: "Infrastructure · System Design",
+        period: "Nov 2025",
+        title: "Orbyt",
+        tagline: "One OpenAI-compatible endpoint in front of every model provider.",
         description:
-          "My concept for the Cars24 Car-a-thon 2026 national hackathon: used-car cleaning re-imagined as a pit-lane assembly line, backed by a solution deep-dive and an interactive simulation of throughput, crew and cost per car.",
+          "A self-hosted LLM gateway: point any OpenAI SDK client at /v1/chat/completions and Orbyt routes, retries and falls back across providers — with keys, limits and live traces in its own dashboard.",
         bullets: [
-          { k: "One car every 24 seconds", t: "eight stations over 50 m — each car gets six minutes of work" },
-          { k: "Interactive line simulation", t: "takt P50 / P90, clean score, labour, water and ₹ per car" },
-          { k: "Top 20 nationally", t: "scenario controls for arrivals, crew variability and soil mix" },
+          { k: "Drop-in OpenAI compatibility", t: "any OpenAI SDK client works unchanged, with bring-your-own-key and pluggable provider adapters" },
+          { k: "Routes by cost and latency", t: "a Redis key pool, model fallback chains and exponential-backoff retries with jitter over 40+ error classes" },
+          { k: "Real-time SSE tracing", t: "a Clerk-secured dashboard with SHA-256-hashed API keys and RPM / TPM rate limits" },
         ],
-        stack: ["Process design", "Line simulation", "Cost modelling", "Data visualisation", "Vercel"],
+        stack: ["System Design", "TypeScript", "Turborepo", "Next.js", "Redis", "Server-Sent Events", "Clerk", "OpenAI SDK"],
         metrics: [
-          { v: "24s", l: "takt time" },
-          { v: "144", l: "cars / hour" },
-          { v: "6.4", l: "person-min / car (from 35)" },
+          { v: "5", l: "apps in the monorepo" },
+          { v: "7", l: "shared packages" },
+          { v: "40+", l: "error classes handled" },
         ],
         links: [
-          { label: "Solution", href: "https://pit24-site.vercel.app/" },
-          { label: "Simulation", href: "https://pit24-simulation.vercel.app/" },
+          { label: "Live demo", href: "https://openrouter-clone-dashboard.vercel.app" },
+          { label: "Source", href: `${GITHUB}/openrouter-clone` },
         ],
         note: "",
-        role: "Concept, line design, simulation and cost model",
+        role: "Co-builder — gateway routing, fallbacks, provider adapters and tracing UI",
         features: [
-          { t: "Line design", d: "8 stations balanced to a 24-second takt" },
-          { t: "Simulation", d: "Seeded, replayable model of crew, cars and queues" },
-          { t: "Scenarios", d: "Soil routing, rework bay, peak inflow, rough crew days" },
-          { t: "Unit economics", d: "Labour, water and ₹ per car at every tier" },
+          { t: "Fallback chains", d: "A failed model hands the request to the next in line" },
+          { t: "Smart routing", d: "Providers chosen by cost and latency from a Redis pool" },
+          { t: "Live traces", d: "Every request streamed to the dashboard over SSE" },
+          { t: "Key security", d: "SHA-256-hashed keys with per-key RPM / TPM limits" },
         ],
-        art: "pit24",
-        imageLabel: "pit24-simulation.vercel.app",
-        highlight: "Top 20 nationally · Cars24 Car-a-thon 2026",
+        art: "orbyt",
+        imageLabel: "openrouter-clone-dashboard.vercel.app",
       },
     ],
   },
@@ -409,17 +461,22 @@ export const portfolio: Portfolio = {
   highlights: {
     eyebrow: "Recognition",
     heading: "Beyond the *code.*",
+    featured: {
+      kicker: "National hackathon · Achievement",
+      title: "Top 20 all-India · Cars24 Car-a-thon 2026",
+      body: "Designed PIT-24: used-car cleaning re-imagined as a pit-lane assembly line — eight stations, one car every 24 seconds — backed by a solution deep-dive and a 3D, replayable simulation of throughput, crew and cost per car.",
+      date: "2026",
+      metrics: [
+        { v: "24s", l: "takt time" },
+        { v: "144", l: "cars / hour" },
+        { v: "Top 20", l: "nationally" },
+      ],
+      links: [
+        { label: "Solution", href: "https://pit24-site.vercel.app/" },
+        { label: "Simulation", href: "https://pit24-simulation.vercel.app/" },
+      ],
+    },
     items: [
-      {
-        kicker: "National hackathon",
-        title: "Top 20 · Cars24 Car-a-thon",
-        body: "Conceived PIT-24, a 24-second car-cleaning line with an interactive solution and simulation — top 20 nationally out of hundreds of teams.",
-        date: "2026",
-        links: [
-          { label: "Solution", href: "https://pit24-site.vercel.app/" },
-          { label: "Simulation", href: "https://pit24-simulation.vercel.app/" },
-        ],
-      },
       {
         kicker: "Certification",
         title: "Naukri Young Turks",

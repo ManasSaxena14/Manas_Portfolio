@@ -1,8 +1,10 @@
 import type { CSSProperties } from "react";
 import { pad, portfolio } from "@/data/portfolio";
 import { Arrow, RollLabel, SectionHeader, SplitWords } from "@/components/SectionHeader";
+import CountUp from "@/components/CountUp";
+import ProjectArt from "@/components/ProjectArt";
 
-const { eyebrow, heading, items, profiles } = portfolio.highlights;
+const { eyebrow, heading, featured, items, profiles } = portfolio.highlights;
 
 export default function Highlights() {
   return (
@@ -11,7 +13,55 @@ export default function Highlights() {
         <SectionHeader eyebrow={eyebrow} index="(04)" />
         <SplitWords text={heading} className="h2 max-w-[14ch]" />
 
-        <div data-gsap-cards className="mt-[clamp(40px,5vw,72px)] grid grid-cols-1 gap-3 md:grid-cols-2">
+        {/* The hackathon, shown wide with its blueprint scene */}
+        <article
+          data-spotlight
+          className="relative mt-[clamp(40px,5vw,72px)] grid grid-cols-1 gap-[clamp(22px,3vw,44px)] overflow-hidden rounded-[22px] border border-line-soft bg-surface p-[clamp(20px,2.6vw,36px)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]"
+        >
+          <div className="flex min-w-0 flex-col gap-5">
+            <div data-ambient className="hl-badge self-start">
+              <svg viewBox="0 0 24 24" className="size-4 flex-none" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M8 4h8v5a4 4 0 0 1-8 0V4Z" />
+                <path d="M8 6H5v1.5A3 3 0 0 0 8 10.5M16 6h3v1.5a3 3 0 0 1-3 3M12 13v4M8.5 20h7M10 17h4" />
+              </svg>
+              <span>{featured.kicker}</span>
+              <span aria-hidden className="hl-shine" />
+            </div>
+            <SplitWords as="h3" text={featured.title} className="display m-0 text-[clamp(30px,3.4vw,52px)] leading-[1] font-[600]" />
+            <p className="m-0 max-w-[54ch] text-[15.5px] leading-[1.6] text-muted">{featured.body}</p>
+            <div data-reveal="stagger" className="grid grid-cols-3 border-t border-line">
+              {featured.metrics.map((m, k) => (
+                <div key={m.l} className="flex flex-col gap-1 pt-3.5 pr-3" style={{ "--i": k } as CSSProperties}>
+                  <CountUp value={m.v} className="display text-[clamp(22px,2.2vw,32px)] leading-none tabular-nums" />
+                  <span className="font-mono text-[11px] tracking-[.08em] text-dim uppercase">{m.l}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-auto flex flex-wrap gap-2 pt-1">
+              {featured.links.map((l, k) => (
+                <a key={l.href} href={l.href} target="_blank" rel="noopener" className={`btn ${k === 0 ? "btn-primary" : "btn-secondary"}`}>
+                  <RollLabel text={l.label} />
+                  <Arrow />
+                </a>
+              ))}
+            </div>
+          </div>
+          <a
+            href={featured.links[1]?.href ?? featured.links[0]?.href}
+            target="_blank"
+            rel="noopener"
+            data-cursor="view"
+            data-reveal="clip"
+            aria-label="PIT-24 simulation"
+            className="order-first block lg:order-none"
+          >
+            <span className="relative block aspect-[16/10] overflow-hidden rounded-[16px] border border-line-soft bg-bg">
+              <ProjectArt kind="pit24" url="pit24-simulation.vercel.app" />
+            </span>
+          </a>
+        </article>
+
+        <div data-gsap-cards className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
           {items.map((h, i) => (
             <article
               key={h.title}

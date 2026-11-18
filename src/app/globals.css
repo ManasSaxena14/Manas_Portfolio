@@ -1282,3 +1282,25 @@ html.js [data-reveal="stagger"].is-in .display.tabular-nums {
   .hero-depth-a, .hero-depth-b { transform: none !important; }
   .hero-rule-pulse, .hero-cta-glow::before, .hero-term-ring::before { animation: none !important; opacity: 0 !important; }
 }
+
+/* ───────────── work paths (sections/Work) ─────────────
+   The path cards' small living diagrams, the travelling sparks on the fork
+   and the swap of the path title in the tab bar. */
+.wp-flow { animation: pa-dash 1.4s linear infinite; }
+.wp-syn { stroke-opacity: 0.12; animation: wp-syn 2.8s ease-in-out infinite; }
+.wp-node { transform-box: fill-box; transform-origin: center; animation: wp-node 2.8s ease-in-out infinite; }
+.wp-bar { transform-box: fill-box; transform-origin: bottom; animation: wp-bar 3.2s var(--ease-expo) infinite; }
+.wp-spark { filter: drop-shadow(0 0 6px currentColor); }
+.wp-nudge { display: inline-block; animation: wp-nudge 1.6s ease-in-out infinite; }
+.wp-swap { animation: wp-swap 0.8s var(--ease-expo) both; }
+.wp-card:hover .wp-flow,
+.wp-card[aria-pressed="true"] .wp-flow { animation-duration: 0.6s; }
+@keyframes wp-syn { 0%, 100% { stroke-opacity: 0.12; } 40% { stroke-opacity: 0.7; } }
+@keyframes wp-node { 0%, 100% { transform: scale(1); } 40% { transform: scale(1.28); } }
+@keyframes wp-bar { 0% { transform: scaleY(0.25); } 45%, 80% { transform: scaleY(1); } 100% { transform: scaleY(0.25); } }
+@keyframes wp-nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes wp-swap { from { opacity: 0; transform: translateY(14px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .wp-flow, .wp-syn, .wp-node, .wp-bar, .wp-nudge, .wp-swap { animation: none; }
+  .wp-syn { stroke-opacity: 0.35; }
+}
