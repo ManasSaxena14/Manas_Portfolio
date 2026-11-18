@@ -221,7 +221,7 @@ export default function Capabilities() {
                         <span
                           className="flex-1 font-display text-[clamp(22px,2.1vw,32px)] leading-[1.1] font-[600] tracking-[-.02em] transition-[color,transform] duration-500 ease-expo"
                           style={{
-                            color: on ? "var(--color-ink)" : i < idx ? "var(--color-dim)" : "#52525b",
+                            color: on ? "var(--color-ink)" : i < idx ? "var(--color-dim)" : "var(--color-faint)",
                             transform: on ? "translateX(10px)" : "none",
                           }}
                         >

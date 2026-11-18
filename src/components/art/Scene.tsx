@@ -15,7 +15,15 @@ export function Scene({ className, style, children }: { className?: string; styl
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const io = new IntersectionObserver(([e]) => el.toggleAttribute("data-live", e.isIntersecting), { rootMargin: "120px" });
+    // CSS pausing below does not reach SMIL (<animateMotion>), so off-screen
+    // scenes pause their SVG timelines too.
+    const io = new IntersectionObserver(
+      ([e]) => {
+        el.toggleAttribute("data-live", e.isIntersecting);
+        el.querySelectorAll("svg").forEach((svg) => (e.isIntersecting ? svg.unpauseAnimations() : svg.pauseAnimations()));
+      },
+      { rootMargin: "120px" },
+    );
     io.observe(el);
     return () => io.disconnect();
   }, []);

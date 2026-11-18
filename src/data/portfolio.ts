@@ -19,8 +19,9 @@ export type ProcessStep = {
   title: string;
   body: string;
   tags: string[];
-  stat: Metric; // headline number, counted up when the step appears
-  figure: string; // readout shown in the 3D figure's corner
+  stat: Metric; // headline number, counted up with the scroll
+  figure: string; // caption for the stage's zoom layer
+  proof: string[]; // projects that prove this step (names from work.projects)
 };
 
 export type PathId = "dev" | "ai" | "data";
@@ -50,7 +51,7 @@ export type Project = {
   note: string;
   role: string;
   features: { t: string; d: string }[]; // four highlights shown as tiles
-  art: "aura" | "finsight" | "rhomis" | "bidverse" | "pit24" | "orbyt"; // illustrated preview
+  art: "aura" | "finsight" | "rhomis" | "bidverse" | "pit24" | "orbyt" | "hireflow" | "resolveiq" | "trafficgnn" | "fraud" | "zomato"; // illustrated preview
   imageLabel: string;
   highlight?: string; // optional award / recognition pill shown above the title
 };
@@ -60,7 +61,8 @@ export type ExperienceItem = {
   role: string;
   dates: string;
   location: string;
-  skills: string[]; // what the role taught: shown as the entry's only detail
+  points?: { k: string; t: string }[]; // shipped impact, bold lead-in + proof
+  skills: string[]; // what the role taught
 };
 
 export type CapabilityPath = {
@@ -87,6 +89,8 @@ export type Portfolio = {
   firstName: string;
   lastName: string;
   status: string;
+  now: string; // current role, shown in the hero status row
+  proof: Metric[]; // hero proof strip: headline numbers, each verifiable below
   timezone: string;
   tzLabel: string;
   stack: string[];
@@ -140,28 +144,36 @@ export const portfolio: Portfolio = {
   lastName: "Saxena",
   roles: ["AI/ML Engineer", "Full-Stack Developer", "Data Analyst", "Finance Enthusiast"],
   tagline:
-    "I ship production-grade platforms — from ML pipelines and LLM features to *products people use.*",
+    "I build production systems end to end — multi-tenant SaaS, graph neural networks and LLM products that *survive real users.*",
   status: "Open to opportunities",
+  now: "Full Stack Developer · WisBees",
+  proof: [
+    { v: "10", l: "live case studies" },
+    { v: "441", l: "tests on one build" },
+    { v: "Top 20", l: "All-India · Cars24" },
+    { v: "250+", l: "LeetCode solved" },
+  ],
   timezone: "Asia/Kolkata", // any IANA zone — drives the live clock
   tzLabel: "IST",
 
   // Scrolling tech ticker under the hero
   stack: [
-    "Python", "TypeScript", "Next.js", "React.js", "Node.js", "FastAPI", "Scikit-learn", "Pandas",
-    "Groq · LLaMA", "PostgreSQL", "MongoDB", "Drizzle ORM", "Tableau", "Tailwind CSS", "AWS", "Vercel",
+    "Python", "TypeScript", "Next.js", "React", "NestJS", "Node.js", "FastAPI", "PyTorch", "XGBoost",
+    "Scikit-learn", "Pandas", "RAG", "LangChain", "PostgreSQL", "Redis", "MongoDB", "Tableau", "AWS", "GitHub Actions",
   ],
 
   // The hero terminal types these on a loop ("[bar]" renders a live progress bar)
   terminal: [
-    { cmd: "python forecast.py --horizon 12m", out: ["8,000+ transactions [bar] fit ok", "✓ isolation forest · anomalies flagged"] },
-    { cmd: "npm run typecheck", out: ["✓ strict mode · 0 errors"] },
-    { cmd: "vercel deploy --prod", out: ["▲ build ok · 31 API routes", "✓ live → manas-saxena.vercel.app"] },
+    { cmd: "python train.py --model dcrnn+xgb", out: ["207 sensors [bar] 3 seeds", "✓ 60-min MAE −13.3% vs XGBoost"] },
+    { cmd: "pnpm test --coverage", out: ["✓ 441 passed · 96.7% API coverage"] },
+    { cmd: "curl -X POST /analyze", out: ["✓ Billing & Payments · 99%", "✓ escalation 82% · p95 49.8 ms"] },
+    { cmd: "vercel deploy --prod", out: ["▲ build ok · 10 live projects", "✓ live → manas-saxena.vercel.app"] },
   ],
 
   // Big scrolling band between Capabilities and About
   manifesto: ["Data", "Models", "Agents", "Markets", "Products"],
   metaDescription:
-    "Manas Saxena — AI/ML engineer, full-stack developer, data analyst and finance enthusiast from Delhi, India. Production-grade platforms, ML pipelines and LLM-powered products.",
+    "Manas Saxena — AI/ML engineer, full-stack developer and data analyst from Delhi, India. Ten live case studies across software engineering, applied AI and data analytics: multi-tenant SaaS, LLM gateways, graph neural networks, RAG and Tableau dashboards.",
   resumeUrl: "/resume.pdf",
   email: "manas140605@gmail.com",
   location: "Delhi, India",
@@ -192,34 +204,38 @@ export const portfolio: Portfolio = {
       {
         label: "Data",
         title: "It begins as *noise.*",
-        body: "Raw CSVs, 1,599 columns wide — cleaned until the numbers can be trusted.",
-        tags: ["Python", "Pandas", "NumPy", "SQL · ETL"],
-        stat: { v: "54,873", l: "rows cleaned" },
-        figure: "54,873 rows · 1,599 cols",
+        body: "A million transactions. 54,873 survey rows, 1,599 columns wide. Cleaned, typed and profiled until the numbers can be trusted.",
+        tags: ["Python ETL", "Pandas", "SQL", "Feature engineering"],
+        stat: { v: "1,000,000", l: "transactions profiled" },
+        figure: "raw rows · unlabelled",
+        proof: ["Fraud Detection Analytics", "RHoMIS Analytics"],
       },
       {
         label: "Models",
         title: "The noise finds a *shape.*",
-        body: "Clusters, anomalies and forecasts — validated before anyone trusts them.",
-        tags: ["Scikit-learn", "Statsmodels", "K-means", "Isolation Forest"],
-        stat: { v: "8,000+", l: "transactions scored" },
-        figure: "k-means · isolation forest",
+        body: "Clusters, forecasts and graph neural networks, held to leak-free splits and honest baselines before anyone trusts them.",
+        tags: ["PyTorch", "Graph neural networks", "XGBoost", "Scikit-learn"],
+        stat: { v: "24/24", l: "test days won by the graph model" },
+        figure: "clusters · centroids · graph",
+        proof: ["TrafficGNN", "FinSight AI"],
       },
       {
         label: "Agents",
         title: "The shape learns to *reason.*",
-        body: "LLMs with tools — they search, decide and act on live data.",
-        tags: ["Groq", "LLaMA 3.3 70B", "Tool calling", "Zod"],
-        stat: { v: "<100ms", l: "to an AI answer" },
-        figure: "llama 3.3 · tool calls",
+        body: "LLMs with retrieval and tools: they search, cite, route and refuse when the evidence isn't there.",
+        tags: ["RAG", "Tool calling", "LLM gateways", "SHAP"],
+        stat: { v: "<50ms", l: "p95 to triage a ticket" },
+        figure: "llm core · 6 tools",
+        proof: ["ResolveIQ", "Orbyt", "FinSight AI"],
       },
       {
         label: "Products",
         title: "Then it *ships.*",
-        body: "Typed, tested and deployed — live on Vercel, used by real people.",
-        tags: ["Next.js", "FastAPI", "PostgreSQL", "Vercel"],
-        stat: { v: "31", l: "API routes in production" },
-        figure: "31 routes · live on vercel",
+        body: "Typed, tested and deployed. Ten live builds, one with 441 tests and 96.7% API coverage behind it.",
+        tags: ["Next.js", "NestJS", "PostgreSQL", "Vercel"],
+        stat: { v: "10", l: "live builds, one link each" },
+        figure: "10 products · 3 paths",
+        proof: ["HireFlow", "Aura Roast", "BidVerse"],
       },
     ],
   },
@@ -227,40 +243,74 @@ export const portfolio: Portfolio = {
   work: {
     eyebrow: "Featured Work",
     heading: "Three disciplines. *Pick a path.*",
-    intro: "Every build below ships to production, grouped by the craft it proves. Choose a path to walk through its projects.",
+    intro: "Every build below is live, grouped by the discipline it proves. Choose a path to walk through its case studies.",
     paths: [
       {
         id: "dev",
         index: "01",
-        label: "Software Dev",
-        title: "Software *Development*",
-        blurb: "Concurrency-safe backends, typed APIs and systems designed to survive real traffic.",
-        tags: ["System Design", "Next.js", "Node.js", "PostgreSQL", "Redis", "TypeScript"],
+        label: "Software Engineering",
+        title: "Full-Stack & *Systems Engineering*",
+        blurb: "Multi-tenant platforms, concurrency-safe backends and infrastructure designed to survive real traffic.",
+        tags: ["System Design", "Next.js", "NestJS", "PostgreSQL", "Redis", "TypeScript"],
         hue: "#c8f25a",
         cmd: "deploy --prod",
       },
       {
         id: "ai",
         index: "02",
-        label: "AI / ML",
-        title: "AI & *Machine Learning*",
-        blurb: "Forecasting models and tool-using agents where every number is computed, never invented.",
-        tags: ["LLM agents", "RAG", "Scikit-learn", "Forecasting", "FastAPI"],
+        label: "AI / ML Engineering",
+        title: "Applied AI & *Machine Learning*",
+        blurb: "Graph neural networks, calibrated classifiers, RAG and tool-using agents — evaluated honestly, shipped behind tested APIs.",
+        tags: ["Deep learning", "Graph neural networks", "RAG", "PyTorch", "XGBoost", "MLOps"],
         hue: "#7dd3fc",
         cmd: "model.fit()",
       },
       {
         id: "data",
         index: "03",
-        label: "Data Analysis",
-        title: "Data *Analysis*",
-        blurb: "Raw survey dumps turned into indicators, statistics and dashboards people act on.",
-        tags: ["Python ETL", "Pandas", "Statistics", "Tableau", "SQL"],
+        label: "Data Analytics",
+        title: "Data Analytics & *Business Intelligence*",
+        blurb: "Millions of raw rows turned into risk signals, statistical models and dashboards decision-makers act on.",
+        tags: ["Tableau", "Python ETL", "Pandas", "Statistical modelling", "Fraud analytics", "SQL"],
         hue: "#f5b26b",
         cmd: "etl --publish",
       },
     ],
     projects: [
+      {
+        path: "dev",
+        category: "Full-Stack · Multi-Tenant SaaS",
+        period: "Oct 2026",
+        title: "HireFlow",
+        tagline: "One hiring platform, two sides — and both boards stay in sync.",
+        description:
+          "A two-sided hiring platform and ATS. Job seekers track every application on one board, companies run hiring on another, and when a recruiter moves a candidate, the candidate's own card moves with it.",
+        bullets: [
+          { k: "Double bookings impossible", t: "a PostgreSQL exclusion constraint rejects overlapping interviews — verified at 20 concurrent bookings" },
+          { k: "One database does it all", t: "Postgres holds the data, 7 pg-boss job queues and full-text search — no Redis or broker to run" },
+          { k: "441 tests, p95 under 25 ms", t: "96.7% API coverage in CI; 50 concurrent users load-tested with k6 and zero errors" },
+        ],
+        stack: ["System Design", "Next.js 16", "NestJS", "PostgreSQL", "Kysely", "pg-boss", "Neon Auth", "Playwright", "k6"],
+        metrics: [
+          { v: "441", l: "automated tests" },
+          { v: "96.7%", l: "API line coverage" },
+          { v: "4", l: "RBAC roles" },
+        ],
+        links: [
+          { label: "Live demo", href: "https://hire-flow-opal-five.vercel.app" },
+          { label: "Source", href: `${GITHUB}/HireFlow` },
+        ],
+        note: "API runs on Render's free tier — the first request can take up to a minute to wake.",
+        role: "Solo build — system design, NestJS API, worker, Next.js app and CI",
+        features: [
+          { t: "Synced boards", d: "A recruiter's move updates the seeker's card, history and alerts" },
+          { t: "Interview booking", d: "Free-time search across five calendars and signed self-booking links" },
+          { t: "Resume match", d: "PDF or Word scored 0–100 by TF-IDF, with skills found and missing" },
+          { t: "Tenant isolation", d: "Role checked on every route; an immutable, database-enforced audit log" },
+        ],
+        art: "hireflow",
+        imageLabel: "hire-flow-opal-five.vercel.app",
+      },
       {
         path: "dev",
         category: "Full-Stack · AI Commerce",
@@ -297,6 +347,71 @@ export const portfolio: Portfolio = {
       },
       {
         path: "ai",
+        category: "Applied AI · NLP · MLOps",
+        period: "Nov 2026",
+        title: "ResolveIQ",
+        tagline: "Support tickets answered, routed and risk-scored in a single call.",
+        description:
+          "An AI support-ticket intelligence platform. For every ticket it drafts a cited reply from the help center, predicts the right queue and scores the chance of escalation — and shows its evidence, so the agent stays in charge.",
+        bullets: [
+          { k: "Grounded RAG replies", t: "ChromaDB + BM25 fused by reciprocal rank, citations to the page, a refusal rule and a prompt-injection guard" },
+          { k: "Explainable escalation risk", t: "calibrated XGBoost (PR-AUC 0.75 vs 0.39 base rate) with the top three SHAP reasons per ticket" },
+          { k: "Production MLOps", t: "FastAPI at 49.8 ms p95, MLflow model registry, drift reports with a retrain rule, 88% coverage in CI" },
+        ],
+        stack: ["Python", "FastAPI", "DistilBERT", "XGBoost", "SHAP", "ChromaDB", "MLflow", "React"],
+        metrics: [
+          { v: "86.6%", l: "high-priority caught" },
+          { v: "49.8ms", l: "API p95 latency" },
+          { v: "16,337", l: "tickets trained on" },
+        ],
+        links: [{ label: "Source", href: `${GITHUB}/ResolveIQ` }],
+        note: "Live demo coming soon — the Hugging Face Spaces deployment is in progress.",
+        role: "Solo build — RAG pipeline, classifier, risk model, API and React app",
+        features: [
+          { t: "Draft reply", d: "Hybrid retrieval with page-level citations; nothing is sent automatically" },
+          { t: "Ticket routing", d: "Fine-tuned DistilBERT with a review flag for uncertain tickets" },
+          { t: "Risk + reasons", d: "Cost-tuned alert threshold and SHAP explanations per ticket" },
+          { t: "Monitoring", d: "Request log without ticket text, drift detection and feedback" },
+        ],
+        art: "resolveiq",
+        imageLabel: "resolveiq · analyze",
+      },
+      {
+        path: "ai",
+        category: "Deep Learning · Graph Neural Networks",
+        period: "Nov 2026",
+        title: "TrafficGNN",
+        tagline: "Spatio-temporal traffic forecasting with graph neural networks.",
+        description:
+          "Forecasts freeway speed 5–60 minutes ahead for 207 Los Angeles sensors (METR-LA) under one leak-free protocol — proving that models which see the road network beat strong per-sensor baselines, and where that gain comes from.",
+        bullets: [
+          { k: "Hybrid model, best of the study", t: "DCRNN + an XGBoost residual corrector cuts 60-minute error 13.3% vs XGBoost" },
+          { k: "Statistically significant", t: "the graph model wins on all 24 test days — day-level bootstrap and Diebold-Mariano, p < 0.0001" },
+          { k: "Faithful and interpretable", t: "DCRNN port within 1.5% of published results; graph attention shifts downstream before jams" },
+        ],
+        stack: ["PyTorch", "Graph neural networks", "DCRNN", "GATv2", "XGBoost", "Statistical testing", "Streamlit"],
+        metrics: [
+          { v: "13.3%", l: "lower 60-min error" },
+          { v: "207", l: "road sensors" },
+          { v: "24/24", l: "test days won" },
+        ],
+        links: [
+          { label: "Live dashboard", href: "https://trafficflowamldl.streamlit.app" },
+          { label: "Source", href: `${GITHUB}/TrafficFlowControl_AIML-DL_T036` },
+        ],
+        note: "Team of five · Newton School of Technology · with an IEEE-format research paper.",
+        role: "Leak-free preprocessing, baselines, the hybrid model, significance tests and reports",
+        features: [
+          { t: "Leak-free splits", d: "Chronological 70/10/20 with purged boundary windows" },
+          { t: "Six baselines", d: "Persistence to XGBoost on one 46-feature table" },
+          { t: "Graph models", d: "STGAT attention and DCRNN diffusion over the road graph" },
+          { t: "Hybrid corrector", d: "XGBoost learns DCRNN's residual — lowest error at every horizon" },
+        ],
+        art: "trafficgnn",
+        imageLabel: "trafficflowamldl.streamlit.app",
+      },
+      {
+        path: "ai",
         category: "AI · FinTech",
         period: "Oct 2026",
         title: "FinSight AI",
@@ -328,6 +443,43 @@ export const portfolio: Portfolio = {
         ],
         art: "finsight",
         imageLabel: "fin-sight-ai-intelligent-financial.vercel.app",
+      },
+      {
+        path: "data",
+        category: "Fraud Analytics · Business Intelligence",
+        period: "Apr 2026",
+        title: "Fraud Detection Analytics",
+        tagline: "One million transactions. $12.52M of fraud, isolated and explained.",
+        description:
+          "An end-to-end fraud analytics pipeline over 1M transactions and 50,000 accounts across three years: Python ETL, statistical analysis and network analysis, delivered as an interactive Tableau monitoring dashboard.",
+        bullets: [
+          { k: "$12.52M fraud isolated", t: "17,143 fraudulent transactions — 1.71% of total volume — profiled by type, time and account" },
+          { k: "Where the risk lives", t: "card-not-present drives 34.9% of fraud; crypto (5.3%) and money transfer (4.1%) carry the highest rates" },
+          { k: "Actionable security signal", t: "40% of fraud lands between midnight and 5 AM, and accounts without 2FA take ~40% of cases" },
+        ],
+        stack: ["Python", "Pandas", "NumPy", "SciPy", "Network analysis", "Tableau", "Git LFS"],
+        metrics: [
+          { v: "1M", l: "transactions" },
+          { v: "17,143", l: "fraud cases" },
+          { v: "$12.52M", l: "fraud isolated" },
+        ],
+        links: [
+          {
+            label: "Tableau dashboard",
+            href: "https://public.tableau.com/app/profile/manas.saxena/viz/FraudDetectionAnalysis_17774564367470/FraudMonitoringDashboard",
+          },
+          { label: "Source", href: `${GITHUB}/TransactionsFraudDetection_Tableau` },
+        ],
+        note: "",
+        role: "ETL pipeline, feature engineering, statistical analysis and the Tableau dashboard",
+        features: [
+          { t: "ETL pipeline", d: "Modular Python: parsing, dedup, typed features, Git LFS data" },
+          { t: "Behaviour features", d: "Velocity, amount-to-average ratios and off-hours flags" },
+          { t: "Fraud rings", d: "7,411 account links scanned for shared devices and IPs" },
+          { t: "Monitoring", d: "KPIs, day and hour fraud patterns, filterable in Tableau" },
+        ],
+        art: "fraud",
+        imageLabel: "tableau public · fraud monitoring",
       },
       {
         path: "data",
@@ -367,16 +519,52 @@ export const portfolio: Portfolio = {
         imageLabel: "tableau public dashboard",
       },
       {
+        path: "data",
+        category: "Market Analytics · Tableau",
+        period: "Nov 2026",
+        title: "Zomato Market Analytics",
+        tagline: "What makes a Bengaluru restaurant rate well — and earn well?",
+        description:
+          "An interactive Tableau dashboard over 681 Bengaluru restaurants and 67,786 customer ratings, slicing the market by area, cuisine, online ordering and revenue tier to show where demand and quality concentrate.",
+        bullets: [
+          { k: "Market at a glance", t: "681 restaurants, 67,786 ratings, a 3.42 average rating and ₹405 average cost for two" },
+          { k: "Four live filters", t: "area, online ordering, revenue category and cuisine re-slice every view at once" },
+          { k: "Demand mapped", t: "top areas, the ten leading cuisines and online-order adoption (365 of 681) side by side" },
+        ],
+        stack: ["Tableau", "Data cleaning", "Univariate analysis", "Calculated fields", "Dashboard design"],
+        metrics: [
+          { v: "681", l: "restaurants" },
+          { v: "67,786", l: "ratings analysed" },
+          { v: "3.42", l: "average rating" },
+        ],
+        links: [
+          {
+            label: "Tableau dashboard",
+            href: "https://public.tableau.com/app/profile/manas.saxena/viz/ZomatoAnalysisDashboard_17943725317610/Univariateanalysis",
+          },
+        ],
+        note: "",
+        role: "Solo — data preparation, analysis and dashboard design",
+        features: [
+          { t: "KPI strip", d: "Restaurants, ratings, average rating and cost for two" },
+          { t: "Rating spread", d: "Distribution of ratings with its trend line" },
+          { t: "Cuisine demand", d: "Bubble view of the ten most-voted cuisines" },
+          { t: "Revenue tiers", d: "High, medium and low revenue restaurants compared" },
+        ],
+        art: "zomato",
+        imageLabel: "tableau public · zomato analysis",
+      },
+      {
         path: "dev",
         category: "Full-Stack · Real-Time",
-        period: "Oct 2026",
+        period: "Feb 2026",
         title: "BidVerse",
         tagline: "An auction house that stays fair when everyone bids at once.",
         description:
           "A premium auction platform covering the full lifecycle — listing, live competitive bidding and automated commission settlement — on a security-hardened MERN stack.",
         bullets: [
-          { k: "Race-free bidding", t: "server-side validation, idempotent bid upserts and auto-expiring lots" },
-          { k: "Commission engine", t: "settles closed auctions automatically — pending → paid, duplicate-proof" },
+          { k: "Race-free bidding", t: "atomic writes resolve simultaneous equal bids to one winner and a single HTTP 409" },
+          { k: "Commission engine", t: "auto-closes expired lots and settles a 10% commission — idempotent via a compound unique index" },
           { k: "5 security layers", t: "JWT + 3-tier RBAC, Helmet, per-route rate limits and input validation" },
         ],
         stack: ["MongoDB", "Express", "React", "Node.js", "Groq (Llama 3.3)", "GSAP", "three.js", "Recharts"],
@@ -446,7 +634,13 @@ export const portfolio: Portfolio = {
         role: "Full Stack Developer",
         dates: "Sep 2026 — Present",
         location: "Remote",
-        skills: ["Full-stack development", "Dashboards", "REST APIs", "UX design", "Testing & debugging", "Product research"],
+        points: [
+          { k: "Groww / Zerodha-style advisory platform", t: "Next.js, TypeScript and PostgreSQL — 14 pages, 12 APIs" },
+          { k: "Portfolio scanner", t: "parses CAS PDFs and broker CSV / XLSX into 10 analyses on AMFI NAV data" },
+          { k: "Grounded RAG copilot", t: "BM25 + Postgres search, 14 eval cases, with a guard against ungrounded numbers" },
+          { k: "SEBI approval workflow", t: "3-role review in Payload CMS, 7 financial calculators, 172 Vitest tests" },
+        ],
+        skills: ["Next.js", "PostgreSQL", "RAG", "Payload CMS", "Vitest", "Financial data"],
       },
       {
         company: "Finanza Club · Rishihood University",
@@ -492,7 +686,7 @@ export const portfolio: Portfolio = {
       {
         kicker: "Leadership",
         title: "Vice President · Finance Club",
-        body: "Lead weekly financial-literacy workshops and investment simulations, own club budgeting end-to-end and mentor juniors on portfolio analysis.",
+        body: "Organised FinSetu, an India–US finance collaboration with CWC University, plus a Zerodha-partnered quiz and weekly financial-literacy workshops. Owned the club budget.",
         date: "Rishihood University",
         links: [],
       },
@@ -508,6 +702,7 @@ export const portfolio: Portfolio = {
       { label: "LeetCode", stat: "250+ problems solved", href: "https://leetcode.com/u/Manas-14" },
       { label: "Codeforces", stat: "Active competitor", href: "https://codeforces.com/profile/Manas14" },
       { label: "GitHub", stat: "25+ repositories", href: GITHUB },
+      { label: "Kaggle", stat: "Notebooks & datasets", href: "https://www.kaggle.com/manasviveksaxena" },
     ],
   },
 
@@ -519,7 +714,7 @@ export const portfolio: Portfolio = {
         title: "Generative AI & LLM Apps",
         trace: "Tool-call trace",
         description: "LLMs that do real work — and never break the product when the model does.",
-        tags: ["Groq", "LLaMA 3.3 70B", "Tool calling", "Prompt design", "Structured output", "Zod", "FastAPI", "Fallback design"],
+        tags: ["RAG", "Tool calling", "Groq", "LLaMA 3.3 70B", "ChromaDB", "LLM gateways", "Structured output", "Fallback design"],
         provenIn: { label: "Aura Roast", href: "#work" },
         log: [
           "barista.chat(\"smooth, low acidity\")",
@@ -529,36 +724,36 @@ export const portfolio: Portfolio = {
         ],
       },
       {
-        title: "Machine Learning & Data Science",
+        title: "Machine Learning & Deep Learning",
         trace: "Model card",
-        description: "Models validated before anyone trusts them — anomalies, clusters, forecasts.",
-        tags: ["Python", "Scikit-learn", "Pandas", "NumPy", "Statsmodels", "Isolation Forest", "K-means", "Regression", "Forecasting"],
-        provenIn: { label: "FinSight AI", href: "#work" },
+        description: "Models validated before anyone trusts them — leak-free splits, honest baselines, significance tests.",
+        tags: ["Python", "PyTorch", "Graph neural networks", "XGBoost", "Scikit-learn", "DistilBERT", "SHAP", "Forecasting", "MLflow"],
+        provenIn: { label: "TrafficGNN", href: "#work" },
         log: [
-          "load(transactions) · 8,000+ rows",
-          "IsolationForest().fit(features)",
-          "forecast(horizon=12 mo, by=category)",
-          "anomalies → dashboard ✓",
+          "load(METR-LA) · 207 sensors × 34,272 steps",
+          "split(70/10/20, purge_boundaries=True)",
+          "fit(DCRNN) + xgb_residual() · 3 seeds",
+          "MAE@60 −13.3% · 24/24 days, p < 0.0001 ✓",
         ],
       },
       {
         title: "Full-Stack Engineering",
         trace: "Request log",
         description: "Typed, server-rendered platforms with correctness built in.",
-        tags: ["Next.js", "React.js", "TypeScript", "Node.js", "Express.js", "FastAPI", "PostgreSQL", "MongoDB", "Drizzle ORM", "NextAuth", "JWT", "Tailwind CSS"],
-        provenIn: { label: "Aura Roast", href: "#work" },
+        tags: ["System Design", "Next.js", "React.js", "TypeScript", "NestJS", "Node.js", "Express.js", "PostgreSQL", "Redis", "MongoDB", "Kysely", "JWT"],
+        provenIn: { label: "HireFlow", href: "#work" },
         log: [
-          "POST /api/orders · idempotency-key ✓",
-          "UPDATE reservation_slots · atomic",
-          "31 route handlers · zod-validated",
-          "103 API checks passed ✓",
+          "POST /api/v1/interviews · exclusion constraint ✓",
+          "20 concurrent bookings → 1 slot, 19 refused",
+          "pg-boss · 7 queues · idempotent jobs",
+          "441 tests · p95 23 ms @ 50 users ✓",
         ],
       },
       {
         title: "Data Analytics & Visualisation",
         trace: "ETL log",
         description: "From raw survey dumps to dashboards people act on.",
-        tags: ["Tableau", "SQL", "MySQL", "Pandas", "Python ETL", "Statsmodels", "Logistic regression", "Recharts", "LaTeX"],
+        tags: ["Tableau", "SQL", "Pandas", "Python ETL", "Statsmodels", "Logistic regression", "Fraud analytics", "Network analysis"],
         provenIn: { label: "RHoMIS Analytics", href: "#work" },
         log: [
           "etl(54,873 households × 1,599 cols)",
@@ -588,24 +783,24 @@ export const portfolio: Portfolio = {
     avatar: "/avatar.jpg",
     facts: [
       { k: "Based in", v: "Delhi, India" },
-      { k: "Studying", v: "BTech, Artificial Intelligence" },
+      { k: "Studying", v: "BTech, Computer Science & AI" },
       { k: "Currently", v: "Full Stack Developer · WisBees" },
       { k: "Problem solving", v: "250+ LeetCode · Codeforces" },
     ],
     lead: "Most engineers pick a lane. I work across *the whole road.*",
     paragraphs: [
-      "BTech AI student at Newton School of Technology, Rishihood University. I build full-stack products and applied ML — from database design to LLM-powered features.",
+      "BTech Computer Science & AI student at Newton School of Technology, Rishihood University. I build full-stack products and applied ML — from schema and system design to LLM-powered features.",
       "I care about systems that survive real users. Outside the editor, I'm VP of the Finance Club — workshops, investment simulations and the club's budget.",
     ],
     education: [
       {
-        title: "BTech — Artificial Intelligence",
+        title: "BTech — Computer Science & AI",
         school: "Newton School of Technology, Rishihood University",
-        years: "2024 — Present",
-        score: "CGPA 7.6",
+        years: "2024 — 2028",
+        score: "CGPA 7.2",
       },
-      { title: "Class XII", school: "Bansal Public School", years: "2022 — 2023", score: "77.0%" },
-      { title: "Class X", school: "Jiwrajka International School", years: "2020 — 2021", score: "93.0%" },
+      { title: "Class XII", school: "Bansal Public School", years: "2022 — 2023", score: "74.0%" },
+      { title: "Class X", school: "Jiwrajka International School", years: "2020 — 2021", score: "92.0%" },
     ],
     resumeLabel: "Download resume",
   },

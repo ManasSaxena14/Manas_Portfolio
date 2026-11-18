@@ -101,6 +101,18 @@ const BRANCHES = ["M600 46 C600 98 200 78 200 150", "M600 46 V150", "M600 46 C60
 function PathSelector({ active, onChoose }: { active: PathId | null; onChoose: (id: PathId) => void }) {
   const root = useRef<HTMLDivElement>(null);
 
+  // The fork's sparks and the cards' diagrams are SMIL: pause them off screen.
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => el.querySelectorAll("svg").forEach((s) => (e.isIntersecting ? s.unpauseAnimations() : s.pauseAnimations())),
+      { rootMargin: "120px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   // The fork draws itself as it scrolls up the screen, then the cards rise
   // in from depth, one per lane.
   useGSAP(
@@ -213,7 +225,7 @@ function PathCard({ p, active, onChoose }: { p: WorkPath; active: PathId | null;
           {pad(list.length)} {list.length === 1 ? "project" : "projects"}
         </span>
         <span
-          className={`ml-auto rounded-full border px-2 py-0.5 text-[10px] transition-colors duration-500 ${on ? "border-[var(--hue)] bg-[var(--hue)] text-bg" : "border-line text-dim"}`}
+          className={`ml-auto rounded-full border px-2 py-0.5 text-[11px] transition-colors duration-500 ${on ? "border-[var(--hue)] bg-[var(--hue)] text-bg" : "border-line text-dim"}`}
         >
           {on ? "Open" : p.cmd}
         </span>
@@ -328,7 +340,11 @@ function PathBar({ active, onChoose }: { active: PathId; onChoose: (id: PathId) 
   useLayoutEffect(() => {
     const measure = () => {
       const btn = track.current?.querySelector<HTMLElement>(`[data-tab="${active}"]`);
-      if (btn) setPill({ x: btn.offsetLeft, w: btn.offsetWidth });
+      if (!btn) return;
+      setPill({ x: btn.offsetLeft, w: btn.offsetWidth });
+      // On narrow screens the bar scrolls sideways: keep the active tab in view.
+      const t = track.current!;
+      t.scrollTo({ left: btn.offsetLeft - (t.clientWidth - btn.offsetWidth) / 2, behavior: "smooth" });
     };
     measure();
     window.addEventListener("resize", measure);
@@ -338,16 +354,21 @@ function PathBar({ active, onChoose }: { active: PathId; onChoose: (id: PathId) 
   return (
     <div className="wrap mt-[clamp(48px,6vw,96px)]" style={{ "--hue": p.hue } as CSSProperties}>
       <div className="flex flex-col gap-5 border-t border-line pt-6 md:flex-row md:items-center md:justify-between">
-        <div key={active} className="wp-swap flex items-baseline gap-4">
-          <span className="font-mono text-xs tracking-[.14em] text-[var(--hue)] uppercase">Path {p.index}</span>
+        <div key={active} className="wp-swap flex flex-wrap items-baseline gap-x-4 gap-y-2">
+          <span className="font-mono text-xs tracking-[.14em] whitespace-nowrap text-[var(--hue)] uppercase">Path {p.index}</span>
           <span className="display text-[clamp(24px,2.4vw,34px)] leading-none font-[600]">
             <Accent text={p.title} />
           </span>
-          <span className="font-mono text-xs text-dim">
+          <span className="font-mono text-xs whitespace-nowrap text-dim">
             {pad(count)} {count === 1 ? "build" : "builds"}
           </span>
         </div>
-        <div ref={track} role="tablist" aria-label="Project paths" className="relative flex self-start rounded-full border border-line bg-surface p-1 md:self-auto">
+        <div
+          ref={track}
+          role="tablist"
+          aria-label="Project paths"
+          className="relative flex max-w-full self-start overflow-x-auto overscroll-x-contain rounded-full border border-line bg-surface p-1 [scrollbar-width:none] md:flex-none md:self-auto [&::-webkit-scrollbar]:hidden"
+        >
           {pill && (
             <span
               aria-hidden
@@ -482,9 +503,24 @@ function ProjectList({ path }: { path: WorkPath }) {
   );
 }
 
+/** "Live" when the project has something to open, otherwise source-only. */
+const isLive = (p: Project) => p.links.some((l) => /live|dashboard/i.test(l.label));
+
+/** Solo or team, read from the role line and note so the data stays single-sourced. */
+function scopeOf(p: Project) {
+  const t = `${p.role} ${p.note}`;
+  if (/^Solo/i.test(p.role)) return "Solo build";
+  if (/co-?builder|co-?built/i.test(t)) return "Co-built";
+  const team = t.match(/team of (\w+)/i);
+  if (team) return `Team of ${({ two: 2, three: 3, four: 4, five: 5, six: 6 } as Record<string, number>)[team[1].toLowerCase()] ?? team[1]}`;
+  return null;
+}
+
 function ProjectCard({ p, i, total, hue }: { p: Project; i: number; total: number; hue: string }) {
   const num = pad(i + 1);
   const [primary, ...rest] = p.links;
+  const live = isLive(p);
+  const scope = scopeOf(p);
 
   // The scene's layers drift against the pointer, each by its depth.
   const onMove = (e: PointerEvent<HTMLAnchorElement>) => {
@@ -506,147 +542,170 @@ function ProjectCard({ p, i, total, hue }: { p: Project; i: number; total: numbe
     >
       <div
         data-spotlight
-        className={`relative grid origin-top grid-cols-1 gap-[clamp(24px,3.5vw,56px)] rounded-[22px] border border-line-soft bg-surface p-[clamp(20px,3vw,44px)] shadow-[0_-24px_60px_-24px_rgb(0_0_0/.75)] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] ${stacking ? "stack:min-h-[calc(100svh-124px)] stack:will-change-transform" : ""}`}
+        className={`relative flex origin-top flex-col overflow-hidden rounded-[22px] border border-line-soft bg-surface shadow-[0_-24px_60px_-24px_rgb(0_0_0/.75)] ${stacking ? "stack:min-h-[calc(100svh-124px)] stack:will-change-transform" : ""}`}
       >
-        {/* Own layers (stacked layout): the per-frame scale and dim are then
-            composited on the GPU instead of repainting the whole card. */}
+        {/* Own layer (stacked layout): the per-frame dim is composited on the GPU. */}
         <div
           data-shade
           aria-hidden
           className={`pointer-events-none absolute inset-0 z-10 rounded-[inherit] bg-black opacity-0 ${stacking ? "stack:will-change-[opacity]" : ""}`}
         />
+        {/* Path hairline along the top edge */}
+        <span aria-hidden className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,var(--hue)_30%,var(--hue)_70%,transparent)] opacity-70" />
 
-        {/* Copy */}
-        <div className="flex min-w-0 flex-col gap-5">
-          <div className="flex flex-wrap items-center gap-2.5 font-mono text-xs tracking-[.12em] text-muted uppercase">
-            <span className="text-[var(--hue)]">
-              {num} / {pad(total)}
+        {/* Header bar */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-line-soft px-[clamp(20px,3vw,44px)] py-4 font-mono text-[11px] tracking-[.14em] text-muted uppercase">
+          <span className="text-[var(--hue)]">
+            {num} / {pad(total)}
+          </span>
+          <span className="text-faint">/</span>
+          <span className="text-ink-2">{p.category}</span>
+          <span className="ml-auto flex flex-wrap items-center gap-2">
+            <span
+              className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 ${live ? "border-[#86efac]/35 text-[#86efac]" : "border-line text-dim"}`}
+            >
+              <span className={`size-1.5 rounded-full ${live ? "bg-[#86efac]" : "bg-faint"}`} />
+              {live ? "Live" : "Demo soon"}
             </span>
-            <span className="text-faint">/</span>
-            <span>{p.category}</span>
-            <span className="ml-auto rounded-md border border-line px-2 py-0.5 text-[11px] text-dim">{p.period}</span>
-          </div>
-          {p.highlight && (
-            <div data-ambient className="hl-badge self-start">
-              <svg viewBox="0 0 24 24" className="size-4 flex-none" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <path d="M8 4h8v5a4 4 0 0 1-8 0V4Z" />
-                <path d="M8 6H5v1.5A3 3 0 0 0 8 10.5M16 6h3v1.5a3 3 0 0 1-3 3M12 13v4M8.5 20h7M10 17h4" />
-              </svg>
-              <span>{p.highlight}</span>
-              <span aria-hidden className="hl-shine" />
-            </div>
-          )}
-          <div>
-            <SplitWords as="h3" text={p.title} className="display m-0 text-[clamp(38px,4.6vw,72px)] leading-[.95]" />
-            <p className="mt-3.5 mb-0 max-w-[36ch] text-[clamp(18px,1.6vw,22px)] leading-[1.35] text-chip">
-              {p.tagline}
-            </p>
-          </div>
-          <p className="m-0 max-w-[58ch] text-[15.5px] leading-[1.6] text-muted">{p.description}</p>
-
-          {/* Key wins: three bold headlines, each with one line of proof */}
-          <ol data-reveal="stagger" className="m-0 flex list-none flex-col p-0">
-            {p.bullets.map((b, k) => (
-              <li
-                key={b.k}
-                style={{ "--i": k } as CSSProperties}
-                className="group/b relative grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 border-t border-line-soft py-3.5 last:border-b"
-              >
-                <span aria-hidden className="absolute top-[-1px] left-0 h-px w-0 bg-accent transition-[width] duration-700 ease-expo group-hover/b:w-full" />
-                <span className="pt-[3px] font-mono text-[11px] tracking-[.1em] text-accent">{pad(k + 1)}</span>
-                <span className="flex flex-col gap-1">
-                  <span className="font-display text-[clamp(17px,1.5vw,20px)] leading-[1.2] font-[640] tracking-[-.012em] text-ink transition-transform duration-500 ease-expo group-hover/b:translate-x-1">
-                    {b.k}
-                  </span>
-                  <span className="text-[14px] leading-[1.5] text-muted">{b.t}</span>
-                </span>
-              </li>
-            ))}
-          </ol>
-
-          <div data-reveal="stagger" className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {p.features.map((f, k) => (
-              <div
-                key={f.t}
-                style={{ "--i": k } as CSSProperties}
-                className="group/f flex flex-col gap-1 rounded-[12px] border border-line-soft bg-[linear-gradient(160deg,rgb(255_255_255/.025),transparent)] px-3.5 py-3 transition-[border-color,background-color,transform] duration-500 ease-expo hover:-translate-y-0.5 hover:border-accent/40 hover:bg-accent/[.04]"
-              >
-                <span className="flex items-center gap-2 font-mono text-[10.5px] tracking-[.12em] text-ink uppercase">
-                  <span className="text-accent">{pad(k + 1)}</span>
-                  {f.t}
-                </span>
-                <span className="text-[13.5px] leading-[1.45] text-muted">{f.d}</span>
-              </div>
-            ))}
-          </div>
-          <div className="mt-auto flex flex-col gap-3.5 pt-2">
-            <div className="flex flex-wrap gap-2.5">
-              {primary && (
-                <a href={primary.href} target="_blank" rel="noopener" data-magnetic className="btn btn-primary">
-                  <RollLabel text={primary.label} />
-                  <Arrow />
-                </a>
-              )}
-              {rest.map((l) => (
-                <a key={l.href} href={l.href} target="_blank" rel="noopener" className="btn btn-secondary">
-                  <RollLabel text={l.label} />
-                  <Arrow />
-                </a>
-              ))}
-            </div>
-            <p className="m-0 flex items-baseline gap-2.5 font-mono text-xs leading-normal text-muted">
-              <span className="text-faint uppercase">Role</span>
-              {p.role}
-            </p>
-            {p.note && (
-              <p className="m-0 flex items-baseline gap-2.5 font-mono text-xs leading-normal text-dim">
-                <span className="size-1.5 flex-none -translate-y-px bg-accent" />
-                {p.note}
-              </p>
-            )}
-          </div>
+            {scope && <span className="rounded-full border border-line px-2.5 py-1 text-dim">{scope}</span>}
+            <span className="rounded-full border border-line px-2.5 py-1 text-dim">{p.period}</span>
+          </span>
         </div>
 
-        {/* Visual + metrics */}
-        <div className="order-first flex min-w-0 flex-col gap-[18px] lg:order-none">
-          <a
-            href={primary?.href ?? "#"}
-            target="_blank"
-            rel="noopener"
-            data-cursor="view"
-            aria-label={`${p.title} — ${primary?.label ?? "open"}`}
-            data-reveal="clip"
-            onPointerMove={onMove}
-            onPointerLeave={onLeave}
-            className="group/shot relative block no-underline"
-          >
-            <span className="relative block aspect-[16/10] overflow-hidden rounded-[16px] border border-line-soft bg-bg shadow-[0_30px_60px_-30px_rgb(0_0_0/.8)]">
-              <span
-                role="img"
-                aria-label={`${p.title} preview`}
-                className="absolute inset-0 block transition-transform duration-[1.2s] ease-expo group-hover/shot:scale-[1.015]"
-              >
-                <ProjectArt kind={p.art} url={p.imageLabel} />
-              </span>
-              <span className="pointer-events-none absolute bottom-4 left-4 z-10 flex translate-y-2 items-center gap-2 rounded-lg bg-accent px-3 py-1.5 font-mono text-[11px] font-medium tracking-[.1em] text-bg uppercase opacity-0 shadow-[0_8px_24px_-8px_rgb(0_0_0/.6)] transition-[opacity,transform] duration-500 ease-expo group-hover/shot:translate-y-0 group-hover/shot:opacity-100">
-                {primary?.label ?? "Open"} ↗
-              </span>
-            </span>
-          </a>
-          <div data-reveal="stagger" className="grid grid-cols-3 border-t border-line">
-            {p.metrics.map((m, k) => (
-              <div key={m.l} className="flex flex-col gap-1 pt-3.5 pr-3" style={{ "--i": k } as CSSProperties}>
-                <CountUp value={m.v} className="display text-[clamp(24px,2.4vw,36px)] leading-none tabular-nums" />
-                <span className="font-mono text-[11px] tracking-[.08em] text-dim uppercase">{m.l}</span>
+        <div className="grid flex-1 grid-cols-1 gap-[clamp(24px,3.5vw,56px)] p-[clamp(20px,3vw,44px)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
+          {/* Story */}
+          <div className="flex min-w-0 flex-col gap-5">
+            {p.highlight && (
+              <div className="hl-badge self-start">
+                <span>{p.highlight}</span>
+                <span aria-hidden className="hl-shine" />
               </div>
-            ))}
+            )}
+            <div>
+              <SplitWords as="h3" text={p.title} className="display m-0 text-[clamp(36px,4.2vw,66px)] leading-[.95]" />
+              <p className="mt-3.5 mb-0 max-w-[34ch] text-[clamp(18px,1.55vw,22px)] leading-[1.35] text-chip">{p.tagline}</p>
+            </div>
+            <p className="m-0 max-w-[56ch] text-[15.5px] leading-[1.65] text-muted">{p.description}</p>
+
+            {/* Impact: three bold headlines, each with one line of proof */}
+            <div className="flex flex-col gap-2">
+              <span className="font-mono text-[11px] tracking-[.14em] text-dim uppercase">Impact</span>
+              <ol data-reveal="stagger" className="m-0 flex list-none flex-col p-0">
+                {p.bullets.map((b, k) => (
+                  <li
+                    key={b.k}
+                    style={{ "--i": k } as CSSProperties}
+                    className="group/b relative grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 border-t border-line-soft py-3.5 last:border-b"
+                  >
+                    <span aria-hidden className="absolute top-[-1px] left-0 h-px w-0 bg-[var(--hue)] transition-[width] duration-700 ease-expo group-hover/b:w-full" />
+                    <span className="pt-[3px] font-mono text-[11px] tracking-[.1em] text-[var(--hue)]">{pad(k + 1)}</span>
+                    <span className="flex flex-col gap-1">
+                      <span className="font-display text-[clamp(17px,1.45vw,20px)] leading-[1.2] font-[640] tracking-[-.012em] text-ink transition-transform duration-500 ease-expo group-hover/b:translate-x-1">
+                        {b.k}
+                      </span>
+                      <span className="text-[14px] leading-[1.5] text-muted">{b.t}</span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="mt-auto flex flex-col gap-3.5 pt-2">
+              <div className="flex flex-wrap gap-2.5">
+                {primary && (
+                  <a href={primary.href} target="_blank" rel="noopener" data-magnetic className="btn btn-primary">
+                    <RollLabel text={primary.label} />
+                    <Arrow />
+                  </a>
+                )}
+                {rest.map((l) => (
+                  <a key={l.href} href={l.href} target="_blank" rel="noopener" className="btn btn-secondary">
+                    <RollLabel text={l.label} />
+                    <Arrow />
+                  </a>
+                ))}
+              </div>
+              <p className="m-0 flex items-baseline gap-2.5 font-mono text-xs leading-normal text-muted">
+                <span className="text-faint uppercase">Role</span>
+                {p.role}
+              </p>
+              {p.note && (
+                <p className="m-0 flex items-baseline gap-2.5 font-mono text-xs leading-normal text-dim">
+                  <span className="size-1.5 flex-none -translate-y-px bg-[var(--hue)]" />
+                  {p.note}
+                </p>
+              )}
+            </div>
           </div>
-          <div data-reveal="stagger" className="flex flex-wrap gap-1.5">
-            {p.stack.map((t, k) => (
-              <span key={t} className="chip chip-sm" style={{ "--i": k } as CSSProperties}>
-                {t}
+
+          {/* Evidence. On phones it dissolves into the grid so the order reads
+              preview → story → metrics, instead of all the evidence first. */}
+          <div className="flex min-w-0 flex-col gap-5 max-lg:contents">
+            <a
+              href={primary?.href ?? "#"}
+              target="_blank"
+              rel="noopener"
+              data-cursor="view"
+              aria-label={`${p.title} — ${primary?.label ?? "open"}`}
+              data-reveal="clip"
+              onPointerMove={onMove}
+              onPointerLeave={onLeave}
+              className="group/shot relative block no-underline max-lg:order-first"
+            >
+              <span className="relative block aspect-[16/10] overflow-hidden rounded-[16px] border border-line-soft bg-bg shadow-[0_30px_60px_-30px_rgb(0_0_0/.8)]">
+                <span
+                  role="img"
+                  aria-label={`${p.title} preview`}
+                  className="absolute inset-0 block transition-transform duration-[1.2s] ease-expo group-hover/shot:scale-[1.015]"
+                >
+                  <ProjectArt kind={p.art} url={p.imageLabel} />
+                </span>
+                <span className="pointer-events-none absolute bottom-4 left-4 z-10 flex translate-y-2 items-center gap-2 rounded-lg bg-[var(--hue)] px-3 py-1.5 font-mono text-[11px] font-medium tracking-[.1em] text-bg uppercase opacity-0 shadow-[0_8px_24px_-8px_rgb(0_0_0/.6)] transition-[opacity,transform] duration-500 ease-expo group-hover/shot:translate-y-0 group-hover/shot:opacity-100">
+                  {primary?.label ?? "Open"} ↗
+                </span>
               </span>
-            ))}
+            </a>
+
+            <div data-reveal="stagger" className="grid grid-cols-3 border-y border-line max-lg:order-last">
+              {p.metrics.map((m, k) => (
+                <div
+                  key={m.l}
+                  className={`flex flex-col gap-1.5 py-4 ${k > 0 ? "border-l border-line-soft pl-4" : "pr-4"}`}
+                  style={{ "--i": k } as CSSProperties}
+                >
+                  <CountUp value={m.v} className="display text-[clamp(24px,2.4vw,36px)] leading-none tabular-nums" />
+                  <span className="font-mono text-[11px] leading-[1.35] tracking-[.08em] text-dim uppercase">{m.l}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Inside the build: a divided list, not boxes inside the card */}
+            <div className="flex flex-col gap-2 max-lg:order-last">
+              <span className="font-mono text-[11px] tracking-[.14em] text-dim uppercase">Inside the build</span>
+              <dl data-reveal="stagger" className="m-0 grid grid-cols-1 gap-x-6 sm:grid-cols-2">
+                {p.features.map((f, k) => (
+                  <div key={f.t} style={{ "--i": k } as CSSProperties} className="flex flex-col gap-0.5 border-t border-line-soft py-2.5">
+                    <dt className="flex items-center gap-2 text-[14px] font-medium text-ink-2">
+                      <span aria-hidden className="size-1 rounded-full bg-[var(--hue)]" />
+                      {f.t}
+                    </dt>
+                    <dd className="m-0 text-[13px] leading-[1.45] text-muted">{f.d}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
+            <div data-reveal="stagger" className="mt-auto flex flex-wrap gap-1.5 max-lg:order-last">
+              {p.stack.map((t, k) => (
+                <span
+                  key={t}
+                  className={`chip chip-sm ${t === "System Design" ? "border-[var(--hue)] text-ink" : ""}`}
+                  style={{ "--i": k } as CSSProperties}
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

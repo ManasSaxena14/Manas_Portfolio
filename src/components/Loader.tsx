@@ -470,7 +470,7 @@ export default function Loader() {
 
         <span
           data-ld-out
-          className="ld-hint absolute bottom-[clamp(10px,1.4vw,16px)] left-1/2 -translate-x-1/2 font-mono text-[10px] tracking-[.18em] whitespace-nowrap text-faint uppercase"
+          className="ld-hint absolute bottom-[clamp(10px,1.4vw,16px)] left-1/2 -translate-x-1/2 font-mono text-[11px] tracking-[.18em] whitespace-nowrap text-faint uppercase"
         >
           <span className="hidden md:inline">Click or press any key to skip</span>
           <span className="md:hidden">Tap to skip</span>

@@ -105,16 +105,14 @@ export default function Highlights() {
         </div>
 
         {/* Coding profiles */}
-        <div data-reveal="" className="mt-3 grid grid-cols-1 overflow-hidden rounded-[20px] border border-line-soft sm:grid-cols-3">
-          {profiles.map((p, i) => (
+        <div data-reveal="" className="mt-3 grid grid-cols-1 gap-px overflow-hidden rounded-[20px] border border-line-soft bg-line-soft md:grid-cols-2 lg:grid-cols-4">
+          {profiles.map((p) => (
             <a
               key={p.label}
               href={p.href}
               target="_blank"
               rel="noopener"
-              className={`group flex items-center gap-4 bg-surface/60 px-6 py-5 no-underline transition-colors duration-300 hover:bg-surface ${
-                i > 0 ? "border-t border-line-soft sm:border-t-0 sm:border-l" : ""
-              }`}
+              className="group flex items-center gap-4 bg-[#0d0d0f] px-6 py-5 no-underline transition-colors duration-300 hover:bg-surface"
             >
               <span className="flex flex-1 flex-col gap-1">
                 <span className="font-mono text-[11px] tracking-[.14em] text-dim uppercase">{p.label}</span>

@@ -84,7 +84,7 @@ export default function Logo() {
       <Mark />
       <span className="hidden flex-col leading-[1.25] md:flex">
         <span className="font-display text-[16px] font-[640] tracking-[-.015em] text-ink">{fullName}</span>
-        <span className="font-mono text-[9.5px] tracking-[.16em] text-dim uppercase transition-colors duration-300 group-hover:text-accent">
+        <span className="font-mono text-[11px] tracking-[.14em] text-dim uppercase transition-colors duration-300 group-hover:text-accent">
           AI · {bottom}
         </span>
       </span>

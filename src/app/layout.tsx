@@ -55,7 +55,15 @@ export const metadata: Metadata = {
     "React",
     "Python",
     "machine learning",
+    "deep learning",
+    "graph neural networks",
+    "RAG",
     "LLM",
+    "system design",
+    "NestJS",
+    "PostgreSQL",
+    "Tableau",
+    "data analytics",
     "portfolio",
   ],
   alternates: { canonical: "/" },
@@ -90,6 +98,21 @@ export const viewport: Viewport = {
 const { showLoader, loaderEveryVisit } = portfolio.settings;
 const boot = `(function(){var d=document.documentElement;d.classList.add('js');try{var seen=sessionStorage.getItem('loader-seen')==='1';if(${!showLoader}||(${!loaderEveryVisit}&&seen)||matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('skip-loader')}catch(e){}})();`;
 
+// Structured data so search engines can describe the person behind the site.
+const personLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: fullName,
+  url: siteUrl,
+  image: `${siteUrl}${portfolio.about.avatar}`,
+  jobTitle: portfolio.roles[0],
+  description: portfolio.metaDescription,
+  address: { "@type": "PostalAddress", addressLocality: "Delhi", addressCountry: "IN" },
+  alumniOf: { "@type": "CollegeOrUniversity", name: "Newton School of Technology, Rishihood University" },
+  knowsAbout: ["Machine learning", "Deep learning", "Full-stack development", "System design", "Data analytics"],
+  sameAs: portfolio.socials.map((s) => s.href),
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
@@ -99,6 +122,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: boot }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personLd).replace(/</g, "\\u003c") }} />
       </head>
       <body>{children}</body>
     </html>

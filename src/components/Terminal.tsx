@@ -103,7 +103,7 @@ export default function Terminal({ play }: { play: boolean }) {
         <span className="ml-2 flex-1 truncate font-mono text-[11px] tracking-[.06em] text-dim">
           {portfolio.initials.toLowerCase()}@portfolio: ~/lab
         </span>
-        <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-[.14em] text-faint uppercase">
+        <span className="flex items-center gap-1.5 font-mono text-[11px] tracking-[.14em] text-faint uppercase">
           <span className="size-1.5 rounded-full bg-accent" style={{ animation: "pulse 1.6s ease-in-out infinite" }} />
           live
         </span>

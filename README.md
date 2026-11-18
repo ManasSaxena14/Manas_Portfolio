@@ -57,9 +57,9 @@ The current content is placeholder copy.
 | Name, initials, logo label, roles, tagline, email | top-level fields |
 | Availability, timezone for the live clock | `status`, `timezone`, `tzLabel` |
 | Tech ticker, hero terminal session, manifesto band | `stack`, `terminal`, `manifesto` |
-| Process story (4 steps: title, one-line body, stat, tags) | `process.steps` |
-| Projects (5 cards, metrics, links, notes) | `work.projects` |
-| Jobs / internships (heading + skills learned) | `experience.items` |
+| Process story (4 steps: title, body, stat, tags, the projects that prove it) | `process.steps` |
+| Work paths (3) and projects (10: metrics, links, notes, `path`) | `work.paths`, `work.projects` |
+| Jobs / internships (impact points + skills) | `experience.items` |
 | Skill paths, live trace logs, “proven in” project | `capabilities.paths` |
 | Bio, facts, portrait | `about` |
 | Opening sequence (on/off, every visit or once per session), custom cursor, stacking cards | `settings` |
@@ -102,18 +102,26 @@ italic serif, e.g. `"Let's build something that *thinks.*"`.
   roles that decode, a tagline that streams in like LLM tokens, CTAs, a glass
   terminal typing a train → test → deploy session, and a velocity-reactive
   tech ticker.
-- **Process:** pinned scroll story. 4,096 GPU particles morph
-  noise → clusters → reasoning graph → live dashboard, scrubbed by scroll, in a
-  HUD frame with a scan line. A sliding-pill step nav jumps between steps; each
-  step change splits the title into characters that tip in, unblurs a short
-  bold line and counts up its headline stat.
-- **Work:** sticky stacking cards that scale and dim as the next card covers
-  them. Each project has its own art-directed preview (`src/components/art`),
+- **Process:** a pinned infinite zoom (`src/components/ProcessWorlds.tsx`).
+  Four worlds are nested inside each other: raw data → clusters → an LLM
+  agent → the ten live products, each hidden at 1/18 scale in the centre of
+  the one before. Scrolling dives 18× into each centre, with a live
+  magnification readout, a clickable depth gauge, focus brackets and a lens
+  ripple at every hand-off. Titles rise word by word, copy unblurs and each
+  stat counts up, all scrubbed by the scroll rather than timed.
+- **Work:** three paths (Full-Stack & Systems Engineering, Applied AI & Machine
+  Learning, Data Analytics & Business Intelligence). A scroll-drawn fork leads to
+  three path cards; choosing one opens that path's projects as sticky stacking
+  cards that scale and dim as the next card covers them. Each project has its own art-directed preview (`src/components/art`),
   so no two look alike: Aura Roast is the real storefront on an espresso glow
   with a live order tracker and AI-barista chat; FinSight is emerald glass with
   a forecast cone; RHoMIS is a paper data poster with a dot-matrix world map;
-  BidVerse is a velvet auction stage with a spotlit watch; PIT-24 is a
-  blueprint with cars rolling through at takt. Layers drift with the pointer
+  BidVerse is a velvet auction stage with a spotlit watch; PIT-24 (featured in
+  Recognition) is a blueprint with cars rolling through at takt; HireFlow is two
+  plum hiring boards moving in sync; Orbyt is an indigo LLM gateway in orbit;
+  ResolveIQ fans one ticket into reply, queue and risk; TrafficGNN runs a jam
+  wave upstream across a sensor graph; the fraud and Zomato scenes are their
+  Tableau dashboards redrawn. Layers drift with the pointer
   by depth, rise in on scroll, and only animate while on screen.
 - **Experience:** scroll-filled timeline; each role is a card with only the
   company, role and skills learned, sliding in with the skills popping one by one.

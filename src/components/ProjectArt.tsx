@@ -1,17 +1,26 @@
 import Aura from "@/components/art/Aura";
 import BidVerse from "@/components/art/BidVerse";
 import FinSight from "@/components/art/FinSight";
+import Fraud from "@/components/art/Fraud";
+import HireFlow from "@/components/art/HireFlow";
 import Orbyt from "@/components/art/Orbyt";
 import Pit24 from "@/components/art/Pit24";
+import ResolveIQ from "@/components/art/ResolveIQ";
 import Rhomis from "@/components/art/Rhomis";
+import TrafficGNN from "@/components/art/TrafficGNN";
+import Zomato from "@/components/art/Zomato";
 
 /**
  * Project previews, one art direction each so no two cards look alike:
- * Aura Roast is the real storefront on an espresso glow; FinSight is emerald
- * glass; RHoMIS is a paper data poster; BidVerse is a velvet auction stage;
- * PIT-24 is a blueprint; Orbyt is an indigo gateway in orbit. All live in components/art and scale with their box.
+ * Aura Roast is its real storefront on an espresso glow; HireFlow its real app
+ * on warm linen; BidVerse a velvet auction stage; Orbyt a planet in deep
+ * space; ResolveIQ a glass prism splitting one ticket into three answers;
+ * TrafficGNN a long-exposure freeway at night; FinSight an engraved emerald
+ * banknote; Fraud a noir card under a scan; RHoMIS a paper data poster; the
+ * Zomato study a tomato-red magazine cover; PIT-24 a blueprint. All live in
+ * components/art and scale with their box.
  */
-export type ArtKind = "aura" | "finsight" | "rhomis" | "bidverse" | "pit24" | "orbyt";
+export type ArtKind = "aura" | "finsight" | "rhomis" | "bidverse" | "pit24" | "orbyt" | "hireflow" | "resolveiq" | "trafficgnn" | "fraud" | "zomato";
 
 export default function ProjectArt({ kind, url }: { kind: ArtKind; url: string }) {
   switch (kind) {
@@ -27,5 +36,15 @@ export default function ProjectArt({ kind, url }: { kind: ArtKind; url: string }
       return <Pit24 />;
     case "orbyt":
       return <Orbyt />;
+    case "hireflow":
+      return <HireFlow url={url} />;
+    case "resolveiq":
+      return <ResolveIQ />;
+    case "trafficgnn":
+      return <TrafficGNN />;
+    case "fraud":
+      return <Fraud />;
+    case "zomato":
+      return <Zomato />;
   }
 }

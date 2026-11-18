@@ -122,8 +122,22 @@ export default function Experience() {
                     <span data-xp-rule aria-hidden className="block h-px origin-left bg-linear-to-r from-accent to-transparent" />
                   </p>
 
+                  {e.points && (
+                    <ol className="relative mt-[clamp(20px,2.4vw,30px)] mb-0 flex list-none flex-col p-0">
+                      {e.points.map((pt, k) => (
+                        <li key={pt.k} className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 border-t border-line-soft py-3 last:border-b">
+                          <span className="pt-[3px] font-mono text-[11px] tracking-[.1em] text-accent">{pad(k + 1)}</span>
+                          <span className="flex flex-col gap-0.5">
+                            <span className="font-display text-[clamp(16px,1.35vw,18px)] leading-[1.25] font-[620] text-ink">{pt.k}</span>
+                            <span className="text-[14px] leading-[1.5] text-muted">{pt.t}</span>
+                          </span>
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+
                   <div className="relative mt-[clamp(20px,2.4vw,30px)] flex flex-col gap-3">
-                    <span className="mono-label text-dim">Skills learned</span>
+                    <span className="mono-label text-dim">{e.points ? "Stack" : "Skills learned"}</span>
                     <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
                       {e.skills.map((s) => (
                         <li

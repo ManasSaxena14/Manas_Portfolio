@@ -17,7 +17,7 @@ import { Arrow, RollLabel } from "@/components/SectionHeader";
 // WebGL canvas only needs to when its own props do.
 const HeroGalaxy = memo(dynamic(() => import("@/components/three/HeroGalaxy"), { ssr: false }));
 
-const { firstName, lastName, roles, tagline, status, location, stack } = portfolio;
+const { firstName, lastName, roles, tagline, status, now, proof, location, stack } = portfolio;
 
 // Geist weight for the first name: at rest → directly under the cursor.
 const REST = 640;
@@ -326,6 +326,7 @@ export default function Hero() {
         .set(lastLi, { clearProps: "filter" })
         .fromTo(q("[data-hero-rule]"), { scaleX: 0 }, { scaleX: 1, duration: 1.8, ease: "expo.inOut" }, 0.6)
         .fromTo(q("[data-hero-role]"), { autoAlpha: 0, x: -26 }, { autoAlpha: 1, x: 0, duration: 1, stagger: 0.1 }, 0.85)
+        .fromTo(q("[data-hero-proof]"), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 1, stagger: 0.08 }, 1.3)
         .fromTo(
           q("[data-hero-cta]"),
           { autoAlpha: 0, y: 28, scale: 0.9 },
@@ -437,6 +438,11 @@ export default function Hero() {
               <span className="relative size-2 rounded-full bg-accent" />
             </span>
             <Scramble text={status} play={heroIn} delay={450} />
+            <span className="hidden h-3 w-px bg-line md:block" />
+            <span className="hidden text-ink-2 md:inline">
+              <span className="text-faint">Now · </span>
+              <Scramble text={now} play={heroIn} delay={560} />
+            </span>
           </span>
           <span className="flex items-center gap-3">
             <span className="hidden md:inline">
@@ -497,6 +503,16 @@ export default function Hero() {
 
             <div className="flex flex-col justify-between gap-6">
               <Stream text={tagline} play={heroIn} delay={950} />
+              {/* Proof strip: four headline numbers, each backed further down the page */}
+              <dl className="m-0 grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4">
+                {proof.map((p) => (
+                  <div key={p.l} data-hero-in data-hero-proof className="flex flex-col gap-1 border-l border-line pl-3">
+                    <dt className="sr-only">{p.l}</dt>
+                    <dd className="m-0 font-display text-[clamp(20px,1.8vw,26px)] leading-none font-[650] tracking-[-.02em] text-ink tabular-nums">{p.v}</dd>
+                    <dd aria-hidden className="m-0 font-mono text-[11px] tracking-[.08em] text-dim uppercase">{p.l}</dd>
+                  </div>
+                ))}
+              </dl>
               <div className="flex flex-wrap gap-3">
                 <span data-hero-in data-hero-cta className="hero-cta-glow relative inline-block">
                   <a href="#work" data-magnetic className="btn btn-primary">
