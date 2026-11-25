@@ -49,7 +49,7 @@ export default function Interactions() {
       e.preventDefault();
       const go = () => {
         const el = id && id !== "top" ? document.getElementById(id) : null;
-        const top = el ? el.getBoundingClientRect().top + window.scrollY - (id === "process" ? 0 : 8) : 0;
+        const top = el ? el.getBoundingClientRect().top + window.scrollY - 8 : 0;
         scrollToY(top);
       };
       if (store.get().menuOpen) {

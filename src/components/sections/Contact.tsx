@@ -104,7 +104,7 @@ export default function Contact() {
       <span aria-hidden className="ambient-blob top-[6%] -left-[12%]" />
       <span aria-hidden className="ambient-blob ambient-blob-b -right-[14%] bottom-[8%]" />
       <div className="wrap">
-        <SectionHeader eyebrow={eyebrow} index="(07)" />
+        <SectionHeader eyebrow={eyebrow} index="(06)" />
         <SplitWords
           text={heading}
           className="mt-7 mb-0 max-w-[13ch] font-display text-[clamp(48px,8.6vw,148px)] leading-[.92] font-[600] tracking-[-.038em]"

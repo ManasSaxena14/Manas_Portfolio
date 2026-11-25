@@ -11,7 +11,7 @@ export default function About() {
       <span aria-hidden className="ambient-blob -top-[8%] -right-[10%]" />
       <span aria-hidden className="ambient-blob ambient-blob-b bottom-[4%] -left-[14%]" />
       <div className="wrap">
-        <SectionHeader eyebrow={eyebrow} index="(06)" />
+        <SectionHeader eyebrow={eyebrow} index="(05)" />
         <div className="mt-[clamp(40px,5vw,72px)] grid grid-cols-1 items-start gap-[clamp(36px,5vw,80px)] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
           <div className="flex flex-col gap-6">
             <div data-reveal="clip" className="w-full max-w-[520px]">

@@ -10,7 +10,7 @@ export default function Highlights() {
   return (
     <section id="recognition" style={tone("gold")} className="sec-pad relative">
       <div className="wrap">
-        <SectionHeader eyebrow={eyebrow} index="(04)" />
+        <SectionHeader eyebrow={eyebrow} index="(03)" />
         <SplitWords text={heading} className="h2 max-w-[14ch]" />
 
         {/* The hackathon, shown wide with its blueprint scene */}

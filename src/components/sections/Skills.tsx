@@ -74,7 +74,7 @@ export default function Skills() {
   return (
     <section id="skills" style={tone("violet")} className="sec-pad relative">
       <div className="wrap">
-        <SectionHeader eyebrow={eyebrow} index="(05)" />
+        <SectionHeader eyebrow={eyebrow} index="(04)" />
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <SplitWords text={heading} className="h2 max-w-[12ch]" />
           <p data-reveal="" className="m-0 max-w-[42ch] text-[17px] leading-[1.6] text-muted lg:pb-3">

@@ -89,7 +89,7 @@ function Stream({ text, play, delay }: { text: string; play: boolean; delay: num
 function ScrollBadge() {
   return (
     <a
-      href="#process"
+      href="#what-i-do"
       data-hero-in
       data-badge
       aria-label="Scroll to explore"

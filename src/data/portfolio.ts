@@ -14,11 +14,8 @@ export type Social = { label: string; handle: string; href: string };
 export type Metric = { v: string; l: string };
 export type Link = { label: string; href: string };
 
-export type ProcessStep = {
-  label: string; // short name, used by screen readers and the stage
-  title: string;
-  body: string;
-};
+/** A run of the opening sentence. With `project`, it links to that case study. */
+export type StatementPart = { t: string; project?: string; note?: string; glyph?: "booking" | "forecast" | "unsure" | "survey" };
 
 export type PathId = "dev" | "ai" | "data";
 
@@ -103,7 +100,7 @@ export type Portfolio = {
   };
   nav: NavLink[];
   socials: Social[];
-  process: { eyebrow: string; heading: string; intro: string; steps: ProcessStep[]; source: Link; live: Link };
+  statement: { label: string; parts: StatementPart[]; hint: string };
   work: { eyebrow: string; heading: string; intro: string; paths: WorkPath[]; projects: Project[] };
   experience: { eyebrow: string; heading: string; items: ExperienceItem[] };
   highlights: {
@@ -176,7 +173,6 @@ export const portfolio: Portfolio = {
   settings: { showLoader: true, loaderEveryVisit: false, customCursor: true, stackedCards: true },
 
   nav: [
-    { label: "Process", href: "#process" },
     { label: "Work", href: "#work" },
     { label: "Experience", href: "#experience" },
     { label: "Skills", href: "#skills" },
@@ -191,39 +187,21 @@ export const portfolio: Portfolio = {
     { label: "Codeforces", handle: "Manas14", href: "https://codeforces.com/profile/Manas14" },
   ],
 
-  process: {
-    eyebrow: "Process",
-    heading: "One problem, *start to finish.*",
-    intro: "How I work, shown on a real feature: stopping double-booked interviews in HireFlow. The rule, the answer and the test below come from its code.",
-    steps: [
-      {
-        label: "The problem",
-        title: "Two people book the same hour.",
-        body: "A recruiter and a candidate can both choose Thursday at 11:00. If both bookings go through, someone turns up to an interview that can't happen.",
-      },
-      {
-        label: "The rule",
-        title: "Let the database refuse it.",
-        body: "Checking the calendar first is never enough, because two requests can pass that check at the same moment. So the rule lives in PostgreSQL, which rejects any overlap.",
-      },
-      {
-        label: "The answer",
-        title: "Say plainly what happened.",
-        body: "The API turns that rejection into one clear answer: this time is taken. The second person knows straight away and can choose another.",
-      },
-      {
-        label: "The proof",
-        title: "Race it.",
-        body: "A test sends 20 bookings to one slot at the same instant. It passes only if one gets in and the other 19 are refused. Run it yourself.",
-      },
-      {
-        label: "The release",
-        title: "Ship it behind checks.",
-        body: "Every push runs lint, types, the migrations up, down and up again, all 441 tests and the build. Then it goes live.",
-      },
+  // One sentence between the hero and the work; each linked claim opens its project
+  statement: {
+    label: "What I do",
+    parts: [
+      { t: "I build hiring software that" },
+      { t: "can’t double-book", project: "HireFlow", note: "solo build", glyph: "booking" },
+      { t: ", train traffic models that" },
+      { t: "see an hour ahead", project: "MetroFlow", note: "team of three", glyph: "forecast" },
+      { t: ", write support tools that" },
+      { t: "admit when they’re unsure", project: "ResolveIQ", note: "solo build", glyph: "unsure" },
+      { t: ", and clean 54,873 farm surveys until they show" },
+      { t: "who goes hungry", project: "RHoMIS Analytics", note: "data pipeline lead in a team of six", glyph: "survey" },
+      { t: "." },
     ],
-    source: { label: "Read the test", href: `${GITHUB}/HireFlow/blob/main/apps/api/test/scheduler.test.ts` },
-    live: { label: "Open HireFlow", href: "https://hire-flow-opal-five.vercel.app" },
+    hint: "Choose any claim to open the project behind it.",
   },
 
   work: {
@@ -787,7 +765,7 @@ export const HUES = Object.values(TONES).map(([c]) => c);
 /** Sets the accent for everything inside an element. */
 export const tone = (t: Tone) => ({ "--color-accent": TONES[t][0], "--color-accent-hover": TONES[t][1] }) as Record<string, string>;
 /** Which accent each section wears; the nav follows along. */
-export const SECTION_TONES: Record<string, Tone> = { process: "lime", work: "lime", experience: "coral", recognition: "gold", skills: "violet", about: "aqua", contact: "lime" };
+export const SECTION_TONES: Record<string, Tone> = { work: "lime", experience: "coral", recognition: "gold", skills: "violet", about: "aqua", contact: "lime" };
 
 export const pad = (n: number) => String(n).padStart(2, "0");
 

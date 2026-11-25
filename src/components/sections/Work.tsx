@@ -112,7 +112,7 @@ export default function Work() {
   return (
     <section id="work" style={tone(skin)} className="sec-pad relative">
       <div className="wrap">
-        <SectionHeader eyebrow={eyebrow} index="(02)" />
+        <SectionHeader eyebrow={eyebrow} index="(01)" />
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <SplitWords text={heading} className="h2 max-w-[14ch]" />
           <p data-reveal="" className="m-0 max-w-[40ch] text-[15.5px] leading-[1.6] text-muted lg:pb-3">

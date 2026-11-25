@@ -50,14 +50,13 @@ that arrives in your inbox.
 ## Editing content
 
 Every word, link and number on the site comes from **`src/data/portfolio.ts`**.
-The current content is placeholder copy.
 
 | What | Where in `portfolio.ts` |
 |---|---|
 | Name, initials, logo label, roles, tagline, email | top-level fields |
 | Availability, timezone for the live clock | `status`, `timezone`, `tzLabel` |
 | Tech ticker, hero terminal session, manifesto band | `stack`, `terminal`, `manifesto` |
-| Process story (intro, 5 steps, links) | `process` |
+| One-sentence statement and the projects it links to | `statement` |
 | Work paths (3) and projects (10: metrics, links, notes, `path`) | `work.paths`, `work.projects` |
 | Jobs / internships (impact points + skills) | `experience.items` |
 | Skills and the projects that prove them | `skills.items` |
@@ -103,11 +102,10 @@ italic serif, e.g. `"Let's build something that *thinks.*"`.
   roles that decode, a tagline that streams in like LLM tokens, CTAs, a glass
   terminal typing a train → test → deploy session, and a velocity-reactive
   tech ticker.
-- **Process:** one real feature from problem to release
-  (`src/components/BookingStage.tsx`). Five steps scroll past while a single
-  calendar stays in view: two bookings collide, HireFlow's own exclusion
-  constraint removes one, the API answers 409, and 20 requests race for the
-  slot (visitors can rerun it). Nothing captures the scroll.
+- **Statement:** one sentence between the hero and the work. Each claim has a
+  small live drawing of what it describes (a refused second booking, a
+  forecast, an undecided vote, 26% of households) and opens the project that
+  backs it up. Words light up in reading order with a native scroll timeline.
 - **Work:** three paths (Full-Stack & Systems Engineering, Applied AI & Machine
   Learning, Data Analytics & Business Intelligence). A scroll-drawn fork leads to
   three path cards; choosing one opens that path's projects as sticky stacking
@@ -158,9 +156,9 @@ src/
   app/            layout (fonts, metadata), page, globals.css (design tokens)
   data/           portfolio.ts  ← edit this
   lib/            gsap.ts (plugin registration), scroll.ts (Lenis), store.ts
-  components/     Nav, Logo, Loader, Cursor, Interactions, GsapEffects, SectionHeader,
+  components/     Nav, Logo, Loader, Cursor, Interactions, Dialogs, SectionHeader,
                   Scramble, Terminal, Marquee, LocalTime, Cover, CountUp
-    sections/     Hero, Process, Work, Experience, Skills, About, Contact, Footer
+    sections/     Hero, Statement, Work, Experience, Skills, About, Contact, Footer
     art/          project previews (Scene/Layer + one scene per project)
-    three/        HeroGalaxy, ProcessScene (WebGL, lazy-loaded)
+    three/        HeroGalaxy (WebGL, lazy-loaded)
 ```

@@ -11,7 +11,7 @@ import Footer from "@/components/sections/Footer";
 import Dialogs from "@/components/Dialogs";
 import Hero from "@/components/sections/Hero";
 import Highlights from "@/components/sections/Highlights";
-import Process from "@/components/sections/Process";
+import Statement from "@/components/sections/Statement";
 import Work from "@/components/sections/Work";
 import { portfolio } from "@/data/portfolio";
 
@@ -27,7 +27,7 @@ export default function Page() {
           footer is revealed from underneath (see Footer). */}
       <main className="relative z-[1] rounded-b-[clamp(28px,4vw,56px)] border-b border-line-soft bg-bg shadow-[0_40px_80px_-30px_rgb(0_0_0/.9)]">
         <Hero />
-        <Process />
+        <Statement />
         <Work />
         <Experience />
         <Highlights />

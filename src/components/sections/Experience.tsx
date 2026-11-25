@@ -74,7 +74,7 @@ export default function Experience() {
   return (
     <section ref={section} id="experience" style={tone("coral")} className="sec-pad relative overflow-x-clip">
       <div className="wrap">
-        <SectionHeader eyebrow={eyebrow} index="(03)" />
+        <SectionHeader eyebrow={eyebrow} index="(02)" />
         <SplitWords text={heading} className="h2 max-w-[14ch]" />
 
         <ol ref={list} className="relative mt-[clamp(48px,6vw,96px)] mb-0 list-none pl-7 lg:pl-0">
