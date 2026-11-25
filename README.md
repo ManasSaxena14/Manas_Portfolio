@@ -7,7 +7,7 @@ Claude Design handoff in `design_handoff_portfolio/` (reference files in
 `reference/`).
 
 **Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 ·
-three.js + React Three Fiber · GSAP (ScrollTrigger, SplitText) · Framer Motion · Lenis.
+three.js + React Three Fiber · GSAP (ScrollTrigger) · Framer Motion · Lenis.
 
 **Type:** Bricolage Grotesque (variable weight) for display, Geist for body/UI,
 JetBrains Mono for labels, Instrument Serif *italic* for accent words. All
@@ -60,7 +60,9 @@ The current content is placeholder copy.
 | Process story (intro, 5 steps, links) | `process` |
 | Work paths (3) and projects (10: metrics, links, notes, `path`) | `work.paths`, `work.projects` |
 | Jobs / internships (impact points + skills) | `experience.items` |
-| Skill paths, live trace logs, “proven in” project | `capabilities.paths` |
+| Skills and the projects that prove them | `skills.items` |
+| 30-second summary | `brief` |
+| Accent colour per section | `SECTION_TONES` (and `tone()` on the section) |
 | Bio, facts, portrait | `about` |
 | Opening sequence (on/off, every visit or once per session), custom cursor, stacking cards | `settings` |
 
@@ -79,16 +81,15 @@ italic serif, e.g. `"Let's build something that *thinks.*"`.
 - **Logo:** MS monogram drawn as a circuit trace (a deep-V M and a chamfered
   S) ending in a lime signal node. It draws itself in on load, the node pings,
   and a signal pulse runs the trace on hover. `src/app/icon.svg` is the favicon.
-- **Opening sequence (Loader):** noise spirals in and condenses into a halo
-  while the MS trace draws itself inside a ring gauge and a giant odometer
-  rolls 000 → 100, paced like a real boot (bursts and hesitations) with a boot
-  log ticking to "ok". It is gated on real readiness (fonts, page assets and
-  the 3D galaxy code; at least 2.7 s, never more than 7.5 s). At 100 the node
-  ignites and a glowing portal opens from the centre into the hero, whose
-  intro starts mid-reveal. Click or press any key to skip; deep links
-  (`/#contact`) land on their section afterwards. Plays on every visit (set
-  `settings.loaderEveryVisit` to `false` for once per session); skipped for
-  reduced motion.
+- **Opening sequence (Loader):** seven dots, one for each colour on the site,
+  unfurl into seven strands that settle from noise into a signal. They keep
+  flowing while the page really loads (fonts, assets and the 3D galaxy code;
+  never more than 4 s), then write the name exactly where the hero sets it. A
+  soft front sweeps across, the real letters take over and the points spiral
+  into the galaxy's core. Canvas 2D, no extra libraries. Click or press any key
+  to skip; deep links (`/#contact`) land on their section afterwards. Plays
+  once per browser session (`settings.loaderEveryVisit`); skipped for reduced
+  motion, where the hero simply appears.
 - **Hero:** a 3D neural galaxy (custom GLSL): 11k particles plus a constellation
   of nodes and edges with signals travelling along them. It spirals in, bends
   away from the cursor and blooms apart on scroll. The first name swells in
@@ -123,15 +124,21 @@ italic serif, e.g. `"Let's build something that *thinks.*"`.
   by depth, rise in on scroll, and only animate while on screen.
 - **Experience:** scroll-filled timeline; each role is a card with only the
   company, role and skills learned, sliding in with the skills popping one by one.
-- **Capabilities:** a pinned scroll story through all five paths. The index
-  fills a progress line under each path as you scroll; the panel swaps with a
-  drawn line glyph, character-split title, bold one-liner, skills and a live
-  trace log. Click any path to jump to it.
+- **Skills:** an evidence map. Skills on one side, projects on the other, a
+  line for every real use; choosing either side traces its proof, and a project
+  opens its case study. Lines are measured on resize, never on scroll.
+- **Quick search** (Cmd/Ctrl+K or `/`) and a **30-second summary**, both native
+  dialogs (`src/components/Dialogs.tsx`). Every project has a link, such as
+  `/#work/metroflow`.
+- **Colour:** each section wears its own accent and the nav follows
+  (`SECTION_TONES` in `portfolio.ts`).
+- **Scroll effects:** parallax, drifting numerals, the reading fade and the
+  manifesto band are native CSS scroll timelines, off the main thread.
 - **Manifesto band:** two giant marquee rows (solid, italic, outline) drifting
   in opposite directions, speeding up and leaning with scroll velocity; the
   rows tilt and slide into place as the band scrolls in.
 - **About / Contact:** clip-wipe portrait with scroll parallax, two short
-  paragraphs whose words brighten as you read down, copy-email button, and a
+  paragraphs that brighten as you read down, copy-email button, and a
   validated form with animated focus underlines, delivered by FormSubmit
   (falls back to a pre-filled email draft).
 - **Footer:** revealed from under the page like a curtain (the page lifts away
@@ -153,7 +160,7 @@ src/
   lib/            gsap.ts (plugin registration), scroll.ts (Lenis), store.ts
   components/     Nav, Logo, Loader, Cursor, Interactions, GsapEffects, SectionHeader,
                   Scramble, Terminal, Marquee, LocalTime, Cover, CountUp
-    sections/     Hero, Process, Work, Experience, Capabilities, About, Contact, Footer
+    sections/     Hero, Process, Work, Experience, Skills, About, Contact, Footer
     art/          project previews (Scene/Layer + one scene per project)
     three/        HeroGalaxy, ProcessScene (WebGL, lazy-loaded)
 ```

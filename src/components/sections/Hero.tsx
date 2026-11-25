@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { memo, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import { fullName, parseAccent, portfolio } from "@/data/portfolio";
-import { useStore } from "@/lib/store";
+import { store, useStore } from "@/lib/store";
 import { prefersReducedMotion } from "@/lib/scroll";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import type { GalaxyInput } from "@/components/three/HeroGalaxy";
@@ -284,7 +284,8 @@ export default function Hero() {
     { scope: hero },
   );
 
-  // Intro: starts as the loader wipes away.
+  // Intro: starts as the opening sweeps away. When the opening has already
+  // written the name, the letters are simply in place and the rest comes sooner.
   useGSAP(
     () => {
       if (!heroIn) return;
@@ -297,8 +298,37 @@ export default function Hero() {
         gsap.set(q("[data-hero-in]"), { autoAlpha: 1 });
         return;
       }
-      gsap
-        .timeline({ defaults: { ease: "expo.out" } })
+      const { assembled } = store.get();
+      const o = assembled ? 0.55 : 0;
+      // One pass, left to right: each letter lights and lets go in turn.
+      const signal = { color: ACCENT, duration: 0.22, ease: "power1.inOut", stagger: { each: 0.06, repeat: 1, yoyo: true } };
+      const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+      if (assembled) {
+        gsap.set([firstLi, lastLi], { y: 0, yPercent: 0 });
+        gsap.set(q("[data-hero-rule]"), { scaleX: 1 });
+        tl.to(firstLi, signal, 1).set(firstLi, { clearProps: "color" });
+      } else {
+        tl
+          // First name: letters tip up out of the floor, unblurring.
+          .fromTo(
+            firstLi,
+            { y: 0, yPercent: 120, rotationX: -85, rotation: 4, filter: "blur(12px)", transformPerspective: 900, transformOrigin: "50% 100%" },
+            { yPercent: 0, rotationX: 0, rotation: 0, filter: "blur(0px)", duration: 1.6, stagger: 0.07 },
+            0.1,
+          )
+          .fromTo(
+            lastLi,
+            { y: 0, yPercent: 120, rotation: 10, filter: "blur(10px)", transformOrigin: "0% 100%" },
+            { yPercent: 0, rotation: 0, filter: "blur(0px)", duration: 1.6, stagger: 0.06 },
+            0.45,
+          )
+          // A signal runs through the first name once it has landed.
+          .to(firstLi, signal, 1.45)
+          .set(firstLi, { clearProps: "color,filter" })
+          .set(lastLi, { clearProps: "filter" })
+          .fromTo(q("[data-hero-rule]"), { scaleX: 0 }, { scaleX: 1, duration: 1.8, ease: "expo.inOut" }, 0.6);
+      }
+      tl
         // The grid opens out from behind the name like an aperture.
         .fromTo(
           q("[data-hero-grid]"),
@@ -307,45 +337,27 @@ export default function Hero() {
           0,
         )
         .fromTo(q("[data-hero-status]"), { autoAlpha: 0, y: -14 }, { autoAlpha: 1, y: 0, duration: 1 }, 0.3)
-        // First name: letters tip up out of the floor, unblurring.
-        .fromTo(
-          firstLi,
-          { y: 0, yPercent: 120, rotationX: -85, rotation: 4, filter: "blur(12px)", transformPerspective: 900, transformOrigin: "50% 100%" },
-          { yPercent: 0, rotationX: 0, rotation: 0, filter: "blur(0px)", duration: 1.6, stagger: 0.07 },
-          0.1,
-        )
-        .fromTo(
-          lastLi,
-          { y: 0, yPercent: 120, rotation: 10, filter: "blur(10px)", transformOrigin: "0% 100%" },
-          { yPercent: 0, rotation: 0, filter: "blur(0px)", duration: 1.6, stagger: 0.06 },
-          0.45,
-        )
-        // A signal runs through the first name once it has landed.
-        .to(firstLi, { color: ACCENT, duration: 0.22, stagger: 0.06, yoyo: true, repeat: 1, ease: "power1.inOut" }, 1.45)
-        .set(firstLi, { clearProps: "color,filter" })
-        .set(lastLi, { clearProps: "filter" })
-        .fromTo(q("[data-hero-rule]"), { scaleX: 0 }, { scaleX: 1, duration: 1.8, ease: "expo.inOut" }, 0.6)
-        .fromTo(q("[data-hero-role]"), { autoAlpha: 0, x: -26 }, { autoAlpha: 1, x: 0, duration: 1, stagger: 0.1 }, 0.85)
-        .fromTo(q("[data-hero-proof]"), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 1, stagger: 0.08 }, 1.3)
+        .fromTo(q("[data-hero-role]"), { autoAlpha: 0, x: -26 }, { autoAlpha: 1, x: 0, duration: 1, stagger: 0.1 }, 0.85 - o)
+        .fromTo(q("[data-hero-proof]"), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 1, stagger: 0.08 }, 1.3 - o)
         .fromTo(
           q("[data-hero-cta]"),
           { autoAlpha: 0, y: 28, scale: 0.9 },
           { autoAlpha: 1, y: 0, scale: 1, duration: 1.2, stagger: 0.1, ease: "back.out(1.6)" },
-          1.5,
+          1.5 - o,
         )
         .fromTo(
           q("[data-hero-term]"),
           { autoAlpha: 0, y: 40, clipPath: "inset(100% 0% 0% 0% round 16px)" },
           { autoAlpha: 1, y: 0, clipPath: "inset(0% 0% 0% 0% round 16px)", duration: 1.4, clearProps: "clipPath" },
-          1.6,
+          1.6 - o,
         )
         .fromTo(
           q("[data-badge]"),
           { autoAlpha: 0, scale: 0.3, rotation: -120 },
           { autoAlpha: 1, scale: 1, rotation: 0, duration: 1.6 },
-          1.2,
+          1.2 - o,
         )
-        .fromTo(q("[data-hero-ticker]"), { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 1 }, 1.9);
+        .fromTo(q("[data-hero-ticker]"), { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 1 }, 1.9 - o);
     },
     { scope: hero, dependencies: [heroIn] },
   );
@@ -403,14 +415,10 @@ export default function Hero() {
       {/* 3D neural galaxy */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          maskImage: "linear-gradient(to bottom, #000 58%, transparent 96%)",
-          WebkitMaskImage: "linear-gradient(to bottom, #000 58%, transparent 96%)",
-        }}
+        className="hero-sky pointer-events-none absolute inset-0"
       >
         {/* While the opening sequence runs, render once on demand (so the
-            shaders compile behind it) and then idle until the portal opens. */}
+            shaders compile behind it) and then idle until the opening sweeps away. */}
         <HeroGalaxy input={input} frameloop={!active ? "never" : heroIn ? "always" : "demand"} reduce={reduce} />
       </div>
 
@@ -521,10 +529,9 @@ export default function Hero() {
                   </a>
                 </span>
                 <span data-hero-in data-hero-cta className="inline-block">
-                  <a href="#contact" className="btn btn-secondary">
-                    <RollLabel text="Let's talk" />
-                    <Arrow dir="right" />
-                  </a>
+                  <button type="button" onClick={() => store.set({ dialog: "brief" })} className="btn btn-secondary">
+                    <RollLabel text="30-second summary" />
+                  </button>
                 </span>
               </div>
             </div>

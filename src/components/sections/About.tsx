@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { portfolio } from "@/data/portfolio";
+import { portfolio, tone } from "@/data/portfolio";
 import { Arrow, RollLabel, SectionHeader, SplitWords } from "@/components/SectionHeader";
 import Cover from "@/components/Cover";
 
@@ -7,7 +7,7 @@ const { eyebrow, avatar, facts, lead, paragraphs, education, resumeLabel } = por
 
 export default function About() {
   return (
-    <section id="about" data-ambient className="sec-pad relative overflow-x-clip">
+    <section id="about" style={tone("aqua")} data-ambient className="sec-pad relative overflow-x-clip">
       <span aria-hidden className="ambient-blob -top-[8%] -right-[10%]" />
       <span aria-hidden className="ambient-blob ambient-blob-b bottom-[4%] -left-[14%]" />
       <div className="wrap">
@@ -45,7 +45,7 @@ export default function About() {
             {paragraphs.map((p) => (
               <p
                 key={p.slice(0, 24)}
-                data-gsap-read
+                data-read
                 className="m-0 max-w-[44ch] text-[clamp(18px,1.6vw,23px)] leading-[1.45] font-[520] tracking-[-.012em] text-ink-2"
               >
                 {p}

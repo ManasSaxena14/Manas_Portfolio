@@ -61,14 +61,11 @@ export type ExperienceItem = {
   skills: string[]; // what the role taught
 };
 
-export type CapabilityPath = {
-  title: string;
-  trace: string;
-  description: string;
-  tags: string[];
-  provenIn: { label: string; href: string };
-  log: string[]; // lines "typed" into the panel's live trace
-};
+/** A skill and the projects that prove it, by title. Only work done here counts. */
+export type Skill = { name: string; group: string; proof: string[] };
+
+/** One accent per section, all light enough to sit on the dark page. */
+export type Tone = "lime" | "sky" | "amber" | "coral" | "violet" | "gold" | "aqua";
 
 export type Highlight = {
   kicker: string;
@@ -116,7 +113,8 @@ export type Portfolio = {
     items: Highlight[];
     profiles: { label: string; stat: string; href: string }[];
   };
-  capabilities: { eyebrow: string; heading: string; paths: CapabilityPath[] };
+  skills: { eyebrow: string; heading: string; intro: string; items: Skill[] };
+  brief: { title: string; lines: { k: string; v: string }[]; picks: { title: string; why: string }[] };
   about: {
     eyebrow: string;
     avatar: string;
@@ -175,12 +173,13 @@ export const portfolio: Portfolio = {
   location: "Delhi, India",
 
   // Behaviour switches (from the design handoff's settings panel)
-  settings: { showLoader: true, loaderEveryVisit: true, customCursor: true, stackedCards: true },
+  settings: { showLoader: true, loaderEveryVisit: false, customCursor: true, stackedCards: true },
 
   nav: [
     { label: "Process", href: "#process" },
     { label: "Work", href: "#work" },
     { label: "Experience", href: "#experience" },
+    { label: "Skills", href: "#skills" },
     { label: "About", href: "#about" },
     { label: "Contact", href: "#contact" },
   ],
@@ -688,75 +687,48 @@ export const portfolio: Portfolio = {
     ],
   },
 
-  capabilities: {
-    eyebrow: "Capabilities",
-    heading: "One engineer, *five paths.*",
-    paths: [
-      {
-        title: "Generative AI & LLM Apps",
-        trace: "Tool-call trace",
-        description: "LLMs that do real work — and never break the product when the model does.",
-        tags: ["RAG", "Tool calling", "Groq", "gpt-oss-120b", "ChromaDB", "Embeddings", "Structured output", "Fallback design"],
-        provenIn: { label: "Aura Roast", href: "#work" },
-        log: [
-          "barista.chat(\"smooth, low acidity\")",
-          "tool: search_catalogue(roast=medium) · 5 hits",
-          "tool: add_to_cart(drink, qty=1) ✓",
-          "fallback provider armed ✓",
-        ],
-      },
-      {
-        title: "Machine Learning & Deep Learning",
-        trace: "Model card",
-        description: "Models validated before anyone trusts them — leak-free splits, honest baselines, significance tests.",
-        tags: ["Python", "PyTorch", "Graph neural networks", "XGBoost", "Scikit-learn", "Embeddings", "SHAP", "Forecasting", "MLflow"],
-        provenIn: { label: "MetroFlow", href: "#work" },
-        log: [
-          "load(METR-LA) · 207 detectors × 34,272 steps",
-          "split(70/10/20, purge_boundaries=True)",
-          "fit(DCRNN) + xgb_residual() · 3 seeds",
-          "MAE@60 −13.3% · 24/24 days, p < 0.0001 ✓",
-        ],
-      },
-      {
-        title: "Full-Stack Engineering",
-        trace: "Request log",
-        description: "Typed, server-rendered platforms with correctness built in.",
-        tags: ["System Design", "Next.js", "React.js", "TypeScript", "NestJS", "Node.js", "Express.js", "PostgreSQL", "MongoDB", "Kysely", "JWT"],
-        provenIn: { label: "HireFlow", href: "#work" },
-        log: [
-          "POST /api/v1/interviews · exclusion constraint ✓",
-          "20 concurrent bookings → 1 slot, 19 refused",
-          "pg-boss · 7 queues · idempotent jobs",
-          "441 tests · p95 23 ms @ 50 users ✓",
-        ],
-      },
-      {
-        title: "Data Analytics & Visualisation",
-        trace: "ETL log",
-        description: "From raw survey dumps to dashboards people act on.",
-        tags: ["Tableau", "SQL", "Pandas", "Python ETL", "Statsmodels", "Logistic regression", "Fraud analytics", "Network analysis"],
-        provenIn: { label: "RHoMIS Analytics", href: "#work" },
-        log: [
-          "etl(54,873 households × 1,599 cols)",
-          "→ 46 indicators · 7 KPIs",
-          "logit(food_shortage ~ income + irrigation)",
-          "publish(tableau_public) ✓",
-        ],
-      },
-      {
-        title: "Quant & Finance",
-        trace: "Advisory log",
-        description: "Data rigor, applied to money — forecasting, risk and benchmarking.",
-        tags: ["Forecasting", "Risk scoring", "Anomaly detection", "Portfolio analysis", "Peer benchmarking", "Budgeting", "Investment simulation"],
-        provenIn: { label: "FinSight AI", href: "#work" },
-        log: [
-          "health_score(user) · 0–100",
-          "peer_benchmark(income_bracket)",
-          "flag(unusual_spend, z > 3)",
-          "goal_odds(paths=4,000) ✓",
-        ],
-      },
+  skills: {
+    eyebrow: "Skills",
+    heading: "Every skill, *with its proof.*",
+    intro: "Choose a skill to see the projects that use it, or a project to see what it took. Team projects count only for the parts I did.",
+    items: [
+      { name: "TypeScript", group: "Build", proof: ["HireFlow", "Aura Roast", "Orbyt", "ResolveIQ"] },
+      { name: "React", group: "Build", proof: ["HireFlow", "Aura Roast", "BidVerse", "Orbyt", "ResolveIQ", "FinSight AI"] },
+      { name: "Next.js", group: "Build", proof: ["HireFlow", "Aura Roast", "Orbyt"] },
+      { name: "Node.js", group: "Build", proof: ["HireFlow", "BidVerse"] },
+      { name: "FastAPI", group: "Build", proof: ["ResolveIQ", "FinSight AI"] },
+      { name: "three.js", group: "Build", proof: ["Aura Roast", "BidVerse", "FinSight AI"] },
+      { name: "System design", group: "Systems", proof: ["HireFlow", "Aura Roast", "BidVerse"] },
+      { name: "Concurrency", group: "Systems", proof: ["HireFlow", "Aura Roast", "BidVerse"] },
+      { name: "PostgreSQL", group: "Systems", proof: ["HireFlow", "Aura Roast"] },
+      { name: "MongoDB", group: "Systems", proof: ["BidVerse", "FinSight AI"] },
+      { name: "Auth and roles", group: "Systems", proof: ["HireFlow", "Aura Roast", "BidVerse"] },
+      { name: "Automated tests", group: "Systems", proof: ["HireFlow", "ResolveIQ", "MetroFlow", "FinSight AI"] },
+      { name: "Python", group: "Models", proof: ["ResolveIQ", "MetroFlow", "FinSight AI", "RHoMIS Analytics"] },
+      { name: "PyTorch", group: "Models", proof: ["MetroFlow", "ResolveIQ"] },
+      { name: "Graph neural networks", group: "Models", proof: ["MetroFlow"] },
+      { name: "XGBoost", group: "Models", proof: ["MetroFlow", "ResolveIQ"] },
+      { name: "Forecasting", group: "Models", proof: ["MetroFlow", "FinSight AI"] },
+      { name: "RAG", group: "Models", proof: ["ResolveIQ", "FinSight AI"] },
+      { name: "LLM tool calling", group: "Models", proof: ["Aura Roast", "FinSight AI"] },
+      { name: "Data cleaning", group: "Analysis", proof: ["RHoMIS Analytics", "MetroFlow"] },
+      { name: "Statistical testing", group: "Analysis", proof: ["MetroFlow"] },
+      { name: "Tableau", group: "Analysis", proof: ["RHoMIS Analytics", "Fraud Detection Analytics", "Zomato Market Analytics"] },
+    ],
+  },
+
+  brief: {
+    title: "Manas in 30 seconds",
+    lines: [
+      { k: "Now", v: "Full Stack Developer at WisBees, remote" },
+      { k: "Studying", v: "BTech Computer Science and AI, Newton School of Technology, 2024 to 2028" },
+      { k: "Based in", v: "Delhi, India" },
+      { k: "Looking for", v: "AI/ML and full-stack roles, internships and freelance builds" },
+    ],
+    picks: [
+      { title: "HireFlow", why: "Hiring platform with 441 tests. The database itself refuses double bookings." },
+      { title: "MetroFlow", why: "Traffic forecasting with graph neural networks. 13.3% less error at 60 minutes, in a team of three." },
+      { title: "ResolveIQ", why: "Support triage that sends 34 of 40 test tickets to the right queue and says when it isn't sure." },
     ],
   },
 
@@ -798,6 +770,25 @@ export const portfolio: Portfolio = {
 };
 
 export const fullName = `${portfolio.firstName} ${portfolio.lastName}`;
+/** "MetroFlow" → "metroflow", used in links like #work/metroflow. */
+export const slug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+const TONES: Record<Tone, [string, string]> = {
+  lime: ["#c8f25a", "#dafa84"],
+  sky: ["#7dd3fc", "#a5e1fd"],
+  amber: ["#f5b26b", "#f9c78f"],
+  coral: ["#ff9b85", "#ffb5a3"],
+  violet: ["#bda8ff", "#d0c1ff"],
+  gold: ["#f2d45c", "#f7e18a"],
+  aqua: ["#7be0c3", "#a0ebd5"],
+};
+/** The seven colours themselves, for the opening. */
+export const HUES = Object.values(TONES).map(([c]) => c);
+/** Sets the accent for everything inside an element. */
+export const tone = (t: Tone) => ({ "--color-accent": TONES[t][0], "--color-accent-hover": TONES[t][1] }) as Record<string, string>;
+/** Which accent each section wears; the nav follows along. */
+export const SECTION_TONES: Record<string, Tone> = { process: "lime", work: "lime", experience: "coral", recognition: "gold", skills: "violet", about: "aqua", contact: "lime" };
+
 export const pad = (n: number) => String(n).padStart(2, "0");
 
 /** Split "*accent*" markup into plain and accent runs. */

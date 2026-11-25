@@ -27,7 +27,7 @@ export default function Interactions() {
     gsap.ticker.lagSmoothing(0);
     const sync = () => {
       const s = store.get();
-      if (s.menuOpen || !s.loaderDone) lenis.stop();
+      if (s.menuOpen || s.dialog || !s.loaderDone) lenis.stop();
       else lenis.start();
     };
     sync();

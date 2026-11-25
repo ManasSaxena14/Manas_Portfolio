@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { pad, portfolio } from "@/data/portfolio";
+import { pad, portfolio, SECTION_TONES, tone } from "@/data/portfolio";
 import { store, useStore } from "@/lib/store";
 import { ScrollTrigger } from "@/lib/gsap";
 import Logo from "@/components/Logo";
@@ -43,7 +43,7 @@ export default function Nav() {
       else if (y < ly - 4 || y < 420) hid = false;
       if (hid !== st.hidden) setHidden((st.hidden = hid));
       ly = y;
-      if (bar.current && Math.abs(p - st.p) > 1e-4) bar.current.style.transform = `scaleX(${(st.p = p)})`;
+      if (bar.current && Math.abs(p - st.p) > 1e-4) bar.current.style.scale = `${(st.p = p)} 1`;
       let act = "";
       for (const [id, top] of tops) if (top - y < H * 0.45) act = id;
       if (act !== st.active) setActive((st.active = act));
@@ -88,13 +88,14 @@ export default function Nav() {
       <div
         ref={bar}
         aria-hidden
-        className="pointer-events-none fixed top-0 right-0 left-0 z-[60] h-0.5 origin-left bg-linear-to-r from-accent/40 to-accent"
-        style={{ transform: "scaleX(0)" }}
+        className="pointer-events-none fixed top-0 right-0 left-0 z-[60] h-0.5 origin-left scale-x-0 bg-accent transition-colors duration-500"
+        style={tone(SECTION_TONES[active] ?? "lime")}
       />
 
       <header
         className="fixed top-0 right-0 left-0 z-50 border-b"
         style={{
+          ...tone(SECTION_TONES[active] ?? "lime"),
           transform: hidden ? "translateY(-100%)" : "none",
           transition: "transform .6s var(--ease-expo), background .4s, border-color .4s",
           background: scrolled || menuOpen ? "color-mix(in srgb, var(--color-bg) 74%, transparent)" : "transparent",
@@ -125,7 +126,7 @@ export default function Nav() {
                   {on && (
                     <motion.span
                       layoutId="nav-pill"
-                      className="absolute inset-0 rounded-[9px] bg-accent"
+                      className="absolute inset-0 rounded-[9px] bg-accent transition-colors duration-500"
                       transition={{ type: "spring", stiffness: 420, damping: 34 }}
                     />
                   )}
@@ -143,6 +144,18 @@ export default function Nav() {
           </nav>
 
           <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => store.set({ dialog: "search", menuOpen: false })}
+              aria-label="Search"
+              aria-keyshortcuts="Meta+K Control+K /"
+              className="nav-search"
+            >
+              <svg viewBox="0 0 20 20" className="size-[18px]" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden>
+                <circle cx="9" cy="9" r="5.5" />
+                <path d="M13.2 13.2L17 17" />
+              </svg>
+            </button>
             <a
               href={resumeUrl}
               target="_blank"

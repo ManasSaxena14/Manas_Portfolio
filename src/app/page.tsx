@@ -4,11 +4,11 @@ import Loader from "@/components/Loader";
 import Marquee from "@/components/Marquee";
 import Nav from "@/components/Nav";
 import About from "@/components/sections/About";
-import Capabilities from "@/components/sections/Capabilities";
+import Skills from "@/components/sections/Skills";
 import Contact from "@/components/sections/Contact";
 import Experience from "@/components/sections/Experience";
 import Footer from "@/components/sections/Footer";
-import GsapEffects from "@/components/GsapEffects";
+import Dialogs from "@/components/Dialogs";
 import Hero from "@/components/sections/Hero";
 import Highlights from "@/components/sections/Highlights";
 import Process from "@/components/sections/Process";
@@ -19,7 +19,7 @@ export default function Page() {
   return (
     <div className="relative min-h-screen">
       <Interactions />
-      <GsapEffects />
+      <Dialogs />
       <Loader />
       <Cursor />
       <Nav />
@@ -31,11 +31,11 @@ export default function Page() {
         <Work />
         <Experience />
         <Highlights />
-        <Capabilities />
+        <Skills />
         {/* Manifesto band: two rows drifting in opposite directions */}
         <section
           aria-label={portfolio.manifesto.join(", ")}
-          data-gsap-band
+          data-band
           className="flex flex-col gap-2 overflow-hidden pt-[clamp(72px,10vw,150px)]"
         >
           <div data-band-row>

@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { pad, portfolio } from "@/data/portfolio";
+import { pad, portfolio, tone } from "@/data/portfolio";
 import { Arrow, RollLabel, SectionHeader, SplitWords } from "@/components/SectionHeader";
 import CountUp from "@/components/CountUp";
 import ProjectArt from "@/components/ProjectArt";
@@ -8,7 +8,7 @@ const { eyebrow, heading, featured, items, profiles } = portfolio.highlights;
 
 export default function Highlights() {
   return (
-    <section id="recognition" className="sec-pad relative">
+    <section id="recognition" style={tone("gold")} className="sec-pad relative">
       <div className="wrap">
         <SectionHeader eyebrow={eyebrow} index="(04)" />
         <SplitWords text={heading} className="h2 max-w-[14ch]" />
@@ -61,7 +61,7 @@ export default function Highlights() {
           </a>
         </article>
 
-        <div data-gsap-cards className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
+        <div data-reveal="cards" className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
           {items.map((h, i) => (
             <article
               key={h.title}

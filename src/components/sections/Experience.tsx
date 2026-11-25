@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { pad, portfolio } from "@/data/portfolio";
+import { pad, portfolio, tone } from "@/data/portfolio";
 import { SectionHeader, SplitWords } from "@/components/SectionHeader";
 import { gsap, MOTION_OK, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
@@ -72,7 +72,7 @@ export default function Experience() {
   );
 
   return (
-    <section ref={section} id="experience" className="sec-pad relative overflow-x-clip">
+    <section ref={section} id="experience" style={tone("coral")} className="sec-pad relative overflow-x-clip">
       <div className="wrap">
         <SectionHeader eyebrow={eyebrow} index="(03)" />
         <SplitWords text={heading} className="h2 max-w-[14ch]" />

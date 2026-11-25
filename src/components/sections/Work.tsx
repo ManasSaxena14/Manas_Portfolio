@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
-import { pad, portfolio, type PathId, type Project, type WorkPath } from "@/data/portfolio";
+import { pad, portfolio, slug, tone, type PathId, type Project, type Tone, type WorkPath } from "@/data/portfolio";
+import { store, useStore } from "@/lib/store";
 import { Accent, Arrow, RollLabel, SectionHeader, SplitWords } from "@/components/SectionHeader";
 import CountUp from "@/components/CountUp";
 import ProjectArt from "@/components/ProjectArt";
-import { clamp, prefersReducedMotion, scrollToY } from "@/lib/scroll";
+import { clamp, getLenis, prefersReducedMotion, scrollToY } from "@/lib/scroll";
 import { gsap, MOTION_OK, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
 const { eyebrow, heading, intro, paths, projects } = portfolio.work;
@@ -46,11 +47,9 @@ export default function Work() {
     goToStage();
     gsap.to(cards, {
       autoAlpha: 0,
-      y: -40,
-      scale: 0.97,
-      duration: 0.45,
-      ease: "power3.in",
-      stagger: 0.05,
+      y: -16,
+      duration: 0.18,
+      ease: "power2.out",
       onComplete: () => {
         busy.current = false;
         setShown(id);
@@ -58,8 +57,60 @@ export default function Work() {
     });
   };
 
+  // Open one project: from a link (#work/metroflow), the search or the skill map.
+  const wanted = useStore((s) => s.project);
+  useEffect(() => {
+    const fromHash = () => {
+      const m = window.location.hash.match(/^#work\/([a-z0-9-]+)$/);
+      if (m && projects.some((p) => slug(p.title) === m[1])) store.set({ project: m[1] });
+    };
+    const start = () => {
+      if (!store.get().loaderDone) return;
+      unsub();
+      fromHash();
+    };
+    const unsub = store.subscribe(start);
+    start();
+    window.addEventListener("hashchange", fromHash);
+    return () => {
+      unsub();
+      window.removeEventListener("hashchange", fromHash);
+    };
+  }, []);
+  useEffect(() => {
+    const p = wanted && projects.find((x) => slug(x.title) === wanted);
+    if (!p) return;
+    setActive(p.path);
+    setShown(p.path);
+    history.replaceState(null, "", `#work/${wanted}`);
+    // Two frames: the list has to mount and settle before it can be measured.
+    let b = 0;
+    const a = requestAnimationFrame(() => {
+      b = requestAnimationFrame(() => {
+        const cards = Array.from(listWrap.current?.querySelectorAll<HTMLElement>("[data-card]") ?? []);
+        const list = cards[0]?.parentElement;
+        const at = cards.findIndex((c) => c.dataset.card === wanted);
+        if (list && at >= 0) {
+          // Cards stick, so their own position lies; add up the ones before.
+          const gap = parseFloat(getComputedStyle(list).rowGap) || 0;
+          const top = list.getBoundingClientRect().top + window.scrollY + cards.slice(0, at).reduce((y, c) => y + c.offsetHeight + gap, 0);
+          getLenis()?.resize(); // the list just made the page taller
+          scrollToY(top - 88);
+          cards[at].focus({ preventScroll: true });
+        }
+        store.set({ project: null });
+      });
+    });
+    return () => {
+      cancelAnimationFrame(a);
+      cancelAnimationFrame(b);
+    };
+  }, [wanted]);
+
+  const skin: Tone = active === "ai" ? "sky" : active === "data" ? "amber" : "lime";
+
   return (
-    <section id="work" className="sec-pad relative">
+    <section id="work" style={tone(skin)} className="sec-pad relative">
       <div className="wrap">
         <SectionHeader eyebrow={eyebrow} index="(02)" />
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
@@ -408,12 +459,9 @@ function ProjectList({ path }: { path: WorkPath }) {
       mm.add(MOTION_OK, () => {
         gsap.from(gsap.utils.toArray<HTMLElement>("[data-card]", list.current), {
           autoAlpha: 0,
-          y: (i: number) => 90 + i * 40,
-          rotationX: -10,
-          transformPerspective: 1400,
-          transformOrigin: "50% 0%",
-          duration: 1.3,
-          stagger: 0.12,
+          y: 48,
+          duration: 0.7,
+          stagger: 0.06,
           clearProps: "transform,opacity,visibility",
           onComplete: () => ScrollTrigger.refresh(),
         });
@@ -536,7 +584,9 @@ function ProjectCard({ p, i, total, hue }: { p: Project; i: number; total: numbe
 
   return (
     <article
-      data-card
+      data-card={slug(p.title)}
+      tabIndex={-1}
+      aria-label={p.title}
       className={`relative ${stacking ? "stack:sticky stack:top-[var(--st)]" : ""}`}
       style={{ "--st": `${92 + i * 18}px`, "--hue": hue } as CSSProperties}
     >

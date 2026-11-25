@@ -6,10 +6,13 @@ import { useSyncExternalStore } from "react";
 type State = {
   menuOpen: boolean;
   heroIn: boolean;
+  assembled: boolean; // the opening already set the hero's name in place
   loaderDone: boolean;
+  dialog: "search" | "brief" | null;
+  project: string | null; // slug asked for by a link, the search or the skill map
 };
 
-const initial: State = { menuOpen: false, heroIn: false, loaderDone: false };
+const initial: State = { menuOpen: false, heroIn: false, assembled: false, loaderDone: false, dialog: null, project: null };
 let state: State = initial;
 const listeners = new Set<() => void>();
 
