@@ -1265,7 +1265,7 @@ html.js [data-reveal="stagger"].is-in .display.tabular-nums {
   .hf-lift, .ob-comet, .ob-wake, .fr-scan, .rq-beam, .rq-caustic, .rq-glint { animation: none; }
 }
 
-/* TrafficGNN scene: light trails flow, the jam smoulders, and the sensor
+/* MetroFlow scene: light trails flow, the jam smoulders, and the sensor
    rings flare one after another, downstream to upstream. */
 .tg-trail { animation: tg-trail 5s linear infinite; }
 .tg-jam { animation: tg-jam 3.4s ease-in-out infinite; }
@@ -1280,39 +1280,51 @@ html.js [data-reveal="stagger"].is-in .display.tabular-nums {
   .tg-trail, .tg-jam, .tg-sensor { animation: none; }
 }
 
-/* ───────────── process zoom (sections/Process) ─────────────
-   The worlds are centred on one zoom point: right of the copy on desktop,
-   above it on phones. Focus brackets frame that point; the shade keeps the
-   copy legible over whatever world is behind it. */
-.pw-origin { left: 50%; top: 34%; }
-@media (min-width: 1080px) { .pw-origin { left: 64%; top: 50%; } }
-.pw-focus {
-  background:
-    linear-gradient(var(--color-accent), var(--color-accent)) top left / 22px 1.5px no-repeat,
-    linear-gradient(var(--color-accent), var(--color-accent)) top left / 1.5px 22px no-repeat,
-    linear-gradient(var(--color-accent), var(--color-accent)) top right / 22px 1.5px no-repeat,
-    linear-gradient(var(--color-accent), var(--color-accent)) top right / 1.5px 22px no-repeat,
-    linear-gradient(var(--color-accent), var(--color-accent)) bottom left / 22px 1.5px no-repeat,
-    linear-gradient(var(--color-accent), var(--color-accent)) bottom left / 1.5px 22px no-repeat,
-    linear-gradient(var(--color-accent), var(--color-accent)) bottom right / 22px 1.5px no-repeat,
-    linear-gradient(var(--color-accent), var(--color-accent)) bottom right / 1.5px 22px no-repeat;
-  opacity: 0.8;
+/* ───────────── process calendar (components/BookingStage) ─────────────
+   A light sheet on the dark page. Lime means booked, coral means refused. */
+.bs {
+  --bs-sheet: #f6f7f4;
+  --bs-panel: #ecefe8;
+  --bs-ink: #16181d;
+  --bs-muted: #585d66;
+  --bs-line: #dadfd5;
+  --bs-line-strong: #a9b0a4;
+  --bs-ok: #c8f25a;
+  --bs-bad: #ff8d73;
+  --bs-bad-ink: #b3311a;
+  background: var(--bs-sheet);
+  color: var(--bs-ink);
 }
-.pw-shade {
-  background:
-    linear-gradient(0deg, var(--color-bg) 0%, rgb(9 9 11 / 0.9) 30%, transparent 62%),
-    radial-gradient(120% 90% at 50% 34%, transparent 40%, rgb(9 9 11 / 0.85) 100%);
+.bs ::selection { background: var(--bs-ok); color: var(--bs-ink); }
+.bs-fill { transition: background-color 300ms var(--ease-expo); }
+.bs-fill[data-tone="busy"] { background: #dfe3da; color: var(--bs-muted); }
+.bs-fill[data-tone="ok"] { background: var(--bs-ok); }
+.bs-fill[data-tone="clash"] { background: color-mix(in srgb, var(--bs-bad) 82%, transparent); }
+.bs-block { transition: right 420ms var(--ease-expo), transform 420ms var(--ease-expo), opacity 260ms ease-out; }
+.bs-panel { transition: opacity 260ms ease-out, transform 380ms var(--ease-expo); }
+.bs-mark { background: var(--bs-ok); color: inherit; border-radius: 4px; padding: 1px 4px; margin: 0 -4px; }
+.bs-dot { background: var(--bs-ink); color: var(--bs-sheet); transition: background-color 260ms ease-out, color 260ms ease-out; }
+.bs-dot[data-state="won"] { background: var(--bs-ok); color: var(--bs-ink); }
+.bs-dot[data-state="lost"] { background: var(--bs-bad); color: var(--bs-ink); }
+.bs-btn {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--bs-ink);
+  color: var(--bs-sheet);
+  font-size: 15px;
+  font-weight: 560;
+  cursor: pointer;
+  transition: transform 160ms var(--ease-expo), opacity 160ms ease-out;
 }
-@media (min-width: 1080px) {
-  .pw-shade {
-    background:
-      linear-gradient(90deg, var(--color-bg) 0%, rgb(9 9 11 / 0.88) 30%, transparent 56%),
-      radial-gradient(90% 90% at 64% 50%, transparent 45%, rgb(9 9 11 / 0.9) 100%);
-  }
+.bs-btn:active { transform: scale(0.97); }
+.bs-btn:disabled { opacity: 0.55; cursor: default; }
+.bs-btn:focus-visible { outline: 2px solid var(--bs-ink); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) {
+  .bs-btn:hover:not(:disabled) { background: #2b2f38; }
 }
-.pw-ping { transform-box: fill-box; transform-origin: center; animation: pa-ping 2.4s ease-out infinite; }
-.pw-signal { animation: pw-signal 2.1s linear infinite; }
-@keyframes pw-signal { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -250; } }
 @media (prefers-reduced-motion: reduce) {
-  .pw-ping, .pw-signal { animation: none; }
+  .bs-block, .bs-panel { transition: opacity 200ms ease-out; transform: none; }
+  .bs-btn:active { transform: none; }
 }

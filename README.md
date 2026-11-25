@@ -57,7 +57,7 @@ The current content is placeholder copy.
 | Name, initials, logo label, roles, tagline, email | top-level fields |
 | Availability, timezone for the live clock | `status`, `timezone`, `tzLabel` |
 | Tech ticker, hero terminal session, manifesto band | `stack`, `terminal`, `manifesto` |
-| Process story (4 steps: title, body, stat, tags, the projects that prove it) | `process.steps` |
+| Process story (intro, 5 steps, links) | `process` |
 | Work paths (3) and projects (10: metrics, links, notes, `path`) | `work.paths`, `work.projects` |
 | Jobs / internships (impact points + skills) | `experience.items` |
 | Skill paths, live trace logs, “proven in” project | `capabilities.paths` |
@@ -102,13 +102,11 @@ italic serif, e.g. `"Let's build something that *thinks.*"`.
   roles that decode, a tagline that streams in like LLM tokens, CTAs, a glass
   terminal typing a train → test → deploy session, and a velocity-reactive
   tech ticker.
-- **Process:** a pinned infinite zoom (`src/components/ProcessWorlds.tsx`).
-  Four worlds are nested inside each other: raw data → clusters → an LLM
-  agent → the ten live products, each hidden at 1/18 scale in the centre of
-  the one before. Scrolling dives 18× into each centre, with a live
-  magnification readout, a clickable depth gauge, focus brackets and a lens
-  ripple at every hand-off. Titles rise word by word, copy unblurs and each
-  stat counts up, all scrubbed by the scroll rather than timed.
+- **Process:** one real feature from problem to release
+  (`src/components/BookingStage.tsx`). Five steps scroll past while a single
+  calendar stays in view: two bookings collide, HireFlow's own exclusion
+  constraint removes one, the API answers 409, and 20 requests race for the
+  slot (visitors can rerun it). Nothing captures the scroll.
 - **Work:** three paths (Full-Stack & Systems Engineering, Applied AI & Machine
   Learning, Data Analytics & Business Intelligence). A scroll-drawn fork leads to
   three path cards; choosing one opens that path's projects as sticky stacking
@@ -119,7 +117,7 @@ italic serif, e.g. `"Let's build something that *thinks.*"`.
   BidVerse is a velvet auction stage with a spotlit watch; PIT-24 (featured in
   Recognition) is a blueprint with cars rolling through at takt; HireFlow is two
   plum hiring boards moving in sync; Orbyt is an indigo LLM gateway in orbit;
-  ResolveIQ fans one ticket into reply, queue and risk; TrafficGNN runs a jam
+  ResolveIQ fans one ticket into reply, queue and risk; MetroFlow runs a jam
   wave upstream across a sensor graph; the fraud and Zomato scenes are their
   Tableau dashboards redrawn. Layers drift with the pointer
   by depth, rise in on scroll, and only animate while on screen.

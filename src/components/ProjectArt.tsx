@@ -7,7 +7,7 @@ import Orbyt from "@/components/art/Orbyt";
 import Pit24 from "@/components/art/Pit24";
 import ResolveIQ from "@/components/art/ResolveIQ";
 import Rhomis from "@/components/art/Rhomis";
-import TrafficGNN from "@/components/art/TrafficGNN";
+import MetroFlow from "@/components/art/MetroFlow";
 import Zomato from "@/components/art/Zomato";
 
 /**
@@ -15,12 +15,12 @@ import Zomato from "@/components/art/Zomato";
  * Aura Roast is its real storefront on an espresso glow; HireFlow its real app
  * on warm linen; BidVerse a velvet auction stage; Orbyt a planet in deep
  * space; ResolveIQ a glass prism splitting one ticket into three answers;
- * TrafficGNN a long-exposure freeway at night; FinSight an engraved emerald
+ * MetroFlow a long-exposure freeway at night; FinSight an engraved emerald
  * banknote; Fraud a noir card under a scan; RHoMIS a paper data poster; the
  * Zomato study a tomato-red magazine cover; PIT-24 a blueprint. All live in
  * components/art and scale with their box.
  */
-export type ArtKind = "aura" | "finsight" | "rhomis" | "bidverse" | "pit24" | "orbyt" | "hireflow" | "resolveiq" | "trafficgnn" | "fraud" | "zomato";
+export type ArtKind = "aura" | "finsight" | "rhomis" | "bidverse" | "pit24" | "orbyt" | "hireflow" | "resolveiq" | "metroflow" | "fraud" | "zomato";
 
 export default function ProjectArt({ kind, url }: { kind: ArtKind; url: string }) {
   switch (kind) {
@@ -40,8 +40,8 @@ export default function ProjectArt({ kind, url }: { kind: ArtKind; url: string }
       return <HireFlow url={url} />;
     case "resolveiq":
       return <ResolveIQ />;
-    case "trafficgnn":
-      return <TrafficGNN />;
+    case "metroflow":
+      return <MetroFlow />;
     case "fraud":
       return <Fraud />;
     case "zomato":

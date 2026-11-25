@@ -62,7 +62,7 @@ export default function Fraud() {
           $12.52M
         </div>
         <div className="mt-[.6cqw] font-mono text-[1.05cqw]" style={{ color: RED }}>
-          fraud isolated · 1.71% of volume
+          fraud isolated · 1.71% of transactions
         </div>
         <div className="mt-[2cqw] flex flex-col">
           {LEDGER.map(([k, v]) => (

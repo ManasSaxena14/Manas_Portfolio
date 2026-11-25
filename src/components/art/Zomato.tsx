@@ -97,8 +97,8 @@ export default function Zomato() {
       {/* Footer strap */}
       <Layer d={1.2} className="bottom-[6%] left-[5%] right-[5%]">
         <div className="flex items-center justify-between border-t border-[#fbefe0]/35 pt-[.8cqw] font-mono text-[1cqw] tracking-[.18em] uppercase" style={{ color: BLUSH }}>
-          <span>Top cuisine · North Indian & Chinese</span>
-          <span>By area · cuisine · revenue tier</span>
+          <span>681 restaurants · 67,786 ratings</span>
+          <span>Area · cuisine · revenue category</span>
         </div>
       </Layer>
     </Scene>

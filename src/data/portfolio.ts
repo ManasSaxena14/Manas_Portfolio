@@ -15,13 +15,9 @@ export type Metric = { v: string; l: string };
 export type Link = { label: string; href: string };
 
 export type ProcessStep = {
-  label: string;
+  label: string; // short name, used by screen readers and the stage
   title: string;
   body: string;
-  tags: string[];
-  stat: Metric; // headline number, counted up with the scroll
-  figure: string; // caption for the stage's zoom layer
-  proof: string[]; // projects that prove this step (names from work.projects)
 };
 
 export type PathId = "dev" | "ai" | "data";
@@ -51,7 +47,7 @@ export type Project = {
   note: string;
   role: string;
   features: { t: string; d: string }[]; // four highlights shown as tiles
-  art: "aura" | "finsight" | "rhomis" | "bidverse" | "pit24" | "orbyt" | "hireflow" | "resolveiq" | "trafficgnn" | "fraud" | "zomato"; // illustrated preview
+  art: "aura" | "finsight" | "rhomis" | "bidverse" | "pit24" | "orbyt" | "hireflow" | "resolveiq" | "metroflow" | "fraud" | "zomato"; // illustrated preview
   imageLabel: string;
   highlight?: string; // optional award / recognition pill shown above the title
 };
@@ -110,7 +106,7 @@ export type Portfolio = {
   };
   nav: NavLink[];
   socials: Social[];
-  process: { eyebrow: string; heading: string; skipLabel: string; steps: ProcessStep[] };
+  process: { eyebrow: string; heading: string; intro: string; steps: ProcessStep[]; source: Link; live: Link };
   work: { eyebrow: string; heading: string; intro: string; paths: WorkPath[]; projects: Project[] };
   experience: { eyebrow: string; heading: string; items: ExperienceItem[] };
   highlights: {
@@ -144,11 +140,11 @@ export const portfolio: Portfolio = {
   lastName: "Saxena",
   roles: ["AI/ML Engineer", "Full-Stack Developer", "Data Analyst", "Finance Enthusiast"],
   tagline:
-    "I build production systems end to end — multi-tenant SaaS, graph neural networks and LLM products that *survive real users.*",
+    "I build software end to end: multi-tenant SaaS, graph neural networks and LLM tools, *tested before they ship.*",
   status: "Open to opportunities",
   now: "Full Stack Developer · WisBees",
   proof: [
-    { v: "10", l: "live case studies" },
+    { v: "10", l: "case studies" },
     { v: "441", l: "tests on one build" },
     { v: "Top 20", l: "All-India · Cars24" },
     { v: "250+", l: "LeetCode solved" },
@@ -159,21 +155,21 @@ export const portfolio: Portfolio = {
   // Scrolling tech ticker under the hero
   stack: [
     "Python", "TypeScript", "Next.js", "React", "NestJS", "Node.js", "FastAPI", "PyTorch", "XGBoost",
-    "Scikit-learn", "Pandas", "RAG", "LangChain", "PostgreSQL", "Redis", "MongoDB", "Tableau", "AWS", "GitHub Actions",
+    "Scikit-learn", "Pandas", "RAG", "LangChain", "PostgreSQL", "MongoDB", "Tableau", "AWS", "GitHub Actions",
   ],
 
   // The hero terminal types these on a loop ("[bar]" renders a live progress bar)
   terminal: [
-    { cmd: "python train.py --model dcrnn+xgb", out: ["207 sensors [bar] 3 seeds", "✓ 60-min MAE −13.3% vs XGBoost"] },
+    { cmd: "python train.py --model dcrnn+xgb", out: ["207 detectors [bar] 3 seeds", "✓ 60-min MAE −13.3% vs XGBoost"] },
     { cmd: "pnpm test --coverage", out: ["✓ 441 passed · 96.7% API coverage"] },
-    { cmd: "curl -X POST /analyze", out: ["✓ Billing & Payments · 99%", "✓ escalation 82% · p95 49.8 ms"] },
-    { cmd: "vercel deploy --prod", out: ["▲ build ok · 10 live projects", "✓ live → manas-saxena.vercel.app"] },
+    { cmd: "curl -X POST /analyze", out: ["✓ queue: service outages · 47%, check it", "✓ escalation risk 82% · flagged"] },
+    { cmd: "vercel deploy --prod", out: ["▲ build ok", "✓ live → manas-saxena.vercel.app"] },
   ],
 
   // Big scrolling band between Capabilities and About
   manifesto: ["Data", "Models", "Agents", "Markets", "Products"],
   metaDescription:
-    "Manas Saxena — AI/ML engineer, full-stack developer and data analyst from Delhi, India. Ten live case studies across software engineering, applied AI and data analytics: multi-tenant SaaS, LLM gateways, graph neural networks, RAG and Tableau dashboards.",
+    "Manas Saxena — AI/ML engineer, full-stack developer and data analyst from Delhi, India. Ten case studies across software engineering, applied AI and data analytics: multi-tenant SaaS, LLM gateways, graph neural networks, RAG and Tableau dashboards.",
   resumeUrl: "/resume.pdf",
   email: "manas140605@gmail.com",
   location: "Delhi, India",
@@ -198,52 +194,43 @@ export const portfolio: Portfolio = {
 
   process: {
     eyebrow: "Process",
-    heading: "How raw data becomes a *shipped product.*",
-    skipLabel: "Skip to work",
+    heading: "One problem, *start to finish.*",
+    intro: "How I work, shown on a real feature: stopping double-booked interviews in HireFlow. The rule, the answer and the test below come from its code.",
     steps: [
       {
-        label: "Data",
-        title: "It begins as *noise.*",
-        body: "A million transactions. 54,873 survey rows, 1,599 columns wide. Cleaned, typed and profiled until the numbers can be trusted.",
-        tags: ["Python ETL", "Pandas", "SQL", "Feature engineering"],
-        stat: { v: "1,000,000", l: "transactions profiled" },
-        figure: "raw rows · unlabelled",
-        proof: ["Fraud Detection Analytics", "RHoMIS Analytics"],
+        label: "The problem",
+        title: "Two people book the same hour.",
+        body: "A recruiter and a candidate can both choose Thursday at 11:00. If both bookings go through, someone turns up to an interview that can't happen.",
       },
       {
-        label: "Models",
-        title: "The noise finds a *shape.*",
-        body: "Clusters, forecasts and graph neural networks, held to leak-free splits and honest baselines before anyone trusts them.",
-        tags: ["PyTorch", "Graph neural networks", "XGBoost", "Scikit-learn"],
-        stat: { v: "24/24", l: "test days won by the graph model" },
-        figure: "clusters · centroids · graph",
-        proof: ["TrafficGNN", "FinSight AI"],
+        label: "The rule",
+        title: "Let the database refuse it.",
+        body: "Checking the calendar first is never enough, because two requests can pass that check at the same moment. So the rule lives in PostgreSQL, which rejects any overlap.",
       },
       {
-        label: "Agents",
-        title: "The shape learns to *reason.*",
-        body: "LLMs with retrieval and tools: they search, cite, route and refuse when the evidence isn't there.",
-        tags: ["RAG", "Tool calling", "LLM gateways", "SHAP"],
-        stat: { v: "<50ms", l: "p95 to triage a ticket" },
-        figure: "llm core · 6 tools",
-        proof: ["ResolveIQ", "Orbyt", "FinSight AI"],
+        label: "The answer",
+        title: "Say plainly what happened.",
+        body: "The API turns that rejection into one clear answer: this time is taken. The second person knows straight away and can choose another.",
       },
       {
-        label: "Products",
-        title: "Then it *ships.*",
-        body: "Typed, tested and deployed. Ten live builds, one with 441 tests and 96.7% API coverage behind it.",
-        tags: ["Next.js", "NestJS", "PostgreSQL", "Vercel"],
-        stat: { v: "10", l: "live builds, one link each" },
-        figure: "10 products · 3 paths",
-        proof: ["HireFlow", "Aura Roast", "BidVerse"],
+        label: "The proof",
+        title: "Race it.",
+        body: "A test sends 20 bookings to one slot at the same instant. It passes only if one gets in and the other 19 are refused. Run it yourself.",
+      },
+      {
+        label: "The release",
+        title: "Ship it behind checks.",
+        body: "Every push runs lint, types, the migrations up, down and up again, all 441 tests and the build. Then it goes live.",
       },
     ],
+    source: { label: "Read the test", href: `${GITHUB}/HireFlow/blob/main/apps/api/test/scheduler.test.ts` },
+    live: { label: "Open HireFlow", href: "https://hire-flow-opal-five.vercel.app" },
   },
 
   work: {
     eyebrow: "Featured Work",
     heading: "Three disciplines. *Pick a path.*",
-    intro: "Every build below is live, grouped by the discipline it proves. Choose a path to walk through its case studies.",
+    intro: "Ten projects in three groups. Choose one to read its case studies.",
     paths: [
       {
         id: "dev",
@@ -251,7 +238,7 @@ export const portfolio: Portfolio = {
         label: "Software Engineering",
         title: "Full-Stack & *Systems Engineering*",
         blurb: "Multi-tenant platforms, concurrency-safe backends and infrastructure designed to survive real traffic.",
-        tags: ["System Design", "Next.js", "NestJS", "PostgreSQL", "Redis", "TypeScript"],
+        tags: ["System Design", "Next.js", "NestJS", "PostgreSQL", "Express", "TypeScript"],
         hue: "#c8f25a",
         cmd: "deploy --prod",
       },
@@ -260,7 +247,7 @@ export const portfolio: Portfolio = {
         index: "02",
         label: "AI / ML Engineering",
         title: "Applied AI & *Machine Learning*",
-        blurb: "Graph neural networks, calibrated classifiers, RAG and tool-using agents — evaluated honestly, shipped behind tested APIs.",
+        blurb: "Graph neural networks, calibrated classifiers, RAG and tool-using agents — evaluated against honest baselines.",
         tags: ["Deep learning", "Graph neural networks", "RAG", "PyTorch", "XGBoost", "MLOps"],
         hue: "#7dd3fc",
         cmd: "model.fit()",
@@ -288,7 +275,7 @@ export const portfolio: Portfolio = {
         bullets: [
           { k: "Double bookings impossible", t: "a PostgreSQL exclusion constraint rejects overlapping interviews — verified at 20 concurrent bookings" },
           { k: "One database does it all", t: "Postgres holds the data, 7 pg-boss job queues and full-text search — no Redis or broker to run" },
-          { k: "441 tests, p95 under 25 ms", t: "96.7% API coverage in CI; 50 concurrent users load-tested with k6 and zero errors" },
+          { k: "441 tests, p95 under 25 ms", t: "96.7% API line coverage; k6 load test with 50 concurrent users and no errors, on one laptop" },
         ],
         stack: ["System Design", "Next.js 16", "NestJS", "PostgreSQL", "Kysely", "pg-boss", "Neon Auth", "Playwright", "k6"],
         metrics: [
@@ -321,17 +308,17 @@ export const portfolio: Portfolio = {
           "Production ordering platform for a specialty-coffee brand: order, track your cup live, book a table and earn loyalty points across 12 cafés in 6 cities.",
         bullets: [
           { k: "Zero data loss", t: "across serverless cold starts — write-through Neon Postgres via Drizzle ORM" },
-          { k: "Tool-calling AI barista", t: "on Groq LLaMA 3.3-70B that searches the menu and fills the cart" },
+          { k: "Tool-calling AI barista", t: "on Groq (gpt-oss-120b) that searches the menu and fills the cart" },
           { k: "Duplicate orders impossible", t: "idempotency keys, server-owned pricing and atomic seat booking" },
         ],
-        stack: ["Next.js 16", "TypeScript", "Neon Postgres", "Drizzle ORM", "NextAuth v5", "Groq (LLaMA 3.3)", "Zod", "Vercel"],
+        stack: ["Next.js 16", "TypeScript", "Neon Postgres", "Drizzle ORM", "NextAuth v5", "Groq (gpt-oss-120b)", "Zod", "Vercel"],
         metrics: [
           { v: "31", l: "API routes" },
           { v: "24", l: "Postgres tables" },
-          { v: "103", l: "automated checks" },
+          { v: "12", l: "cafés in 6 cities" },
         ],
         links: [
-          { label: "Live demo", href: "https://aura-roast-seven.vercel.app/" },
+          { label: "Live demo", href: "https://aura-roast-cafe.vercel.app" },
           { label: "Source", href: `${GITHUB}/AuraRoast` },
         ],
         note: "",
@@ -343,47 +330,47 @@ export const portfolio: Portfolio = {
           { t: "Loyalty tiers", d: "Four tiers derived from an append-only points ledger" },
         ],
         art: "aura",
-        imageLabel: "aura-roast-seven.vercel.app",
+        imageLabel: "aura-roast-cafe.vercel.app",
       },
       {
         path: "ai",
         category: "Applied AI · NLP · MLOps",
         period: "Nov 2026",
         title: "ResolveIQ",
-        tagline: "Support tickets answered, routed and risk-scored in a single call.",
+        tagline: "Reads a support ticket, finds its queue and flags the risk.",
         description:
-          "An AI support-ticket intelligence platform. For every ticket it drafts a cited reply from the help center, predicts the right queue and scores the chance of escalation — and shows its evidence, so the agent stays in charge.",
+          "An AI support-ticket platform. For each ticket it finds the help articles that answer it, predicts the right queue and scores the chance of escalation. It shows its evidence and says when it isn't sure, so a person decides.",
         bullets: [
-          { k: "Grounded RAG replies", t: "ChromaDB + BM25 fused by reciprocal rank, citations to the page, a refusal rule and a prompt-injection guard" },
-          { k: "Explainable escalation risk", t: "calibrated XGBoost (PR-AUC 0.75 vs 0.39 base rate) with the top three SHAP reasons per ticket" },
-          { k: "Production MLOps", t: "FastAPI at 49.8 ms p95, MLflow model registry, drift reports with a retrain rule, 88% coverage in CI" },
+          { k: "Routes by meaning", t: "34 of 40 holdout tickets sent to the right queue, where the earlier DistilBERT managed 17" },
+          { k: "Says when it isn't sure", t: "all 14 tickets it sent on without review were right; the rest go to a person" },
+          { k: "Cites its sources", t: "ChromaDB + BM25 retrieval found 7 of 7 holdout sources, with page citations and a prompt-injection guard" },
         ],
-        stack: ["Python", "FastAPI", "DistilBERT", "XGBoost", "SHAP", "ChromaDB", "MLflow", "React"],
+        stack: ["Python", "FastAPI", "Sentence embeddings", "XGBoost", "SHAP", "ChromaDB", "MLflow", "React"],
         metrics: [
-          { v: "86.6%", l: "high-priority caught" },
-          { v: "49.8ms", l: "API p95 latency" },
-          { v: "16,337", l: "tickets trained on" },
+          { v: "34/40", l: "right queue, holdout" },
+          { v: "7/7", l: "sources found" },
+          { v: "88%", l: "test coverage" },
         ],
         links: [{ label: "Source", href: `${GITHUB}/ResolveIQ` }],
-        note: "Live demo coming soon — the Hugging Face Spaces deployment is in progress.",
-        role: "Solo build — RAG pipeline, classifier, risk model, API and React app",
+        note: "Not deployed yet. The holdout is 40 tickets by one author, and drafted replies haven't been scored.",
+        role: "Solo build — retrieval, semantic model, risk model, API and React app",
         features: [
-          { t: "Draft reply", d: "Hybrid retrieval with page-level citations; nothing is sent automatically" },
-          { t: "Ticket routing", d: "Fine-tuned DistilBERT with a review flag for uncertain tickets" },
-          { t: "Risk + reasons", d: "Cost-tuned alert threshold and SHAP explanations per ticket" },
-          { t: "Monitoring", d: "Request log without ticket text, drift detection and feedback" },
+          { t: "Suggested reply", d: "Drafted from cited help articles; nothing is sent automatically" },
+          { t: "Sorting rack", d: "Shows the probability of all ten queues, not just the winner" },
+          { t: "Risk with reasons", d: "Cost-based alert threshold and an explanation for each score" },
+          { t: "Monitoring", d: "Request log without ticket text, drift reports and feedback" },
         ],
         art: "resolveiq",
-        imageLabel: "resolveiq · analyze",
+        imageLabel: "resolveiq",
       },
       {
         path: "ai",
         category: "Deep Learning · Graph Neural Networks",
         period: "Nov 2026",
-        title: "TrafficGNN",
+        title: "MetroFlow",
         tagline: "Spatio-temporal traffic forecasting with graph neural networks.",
         description:
-          "Forecasts freeway speed 5–60 minutes ahead for 207 Los Angeles sensors (METR-LA) under one leak-free protocol — proving that models which see the road network beat strong per-sensor baselines, and where that gain comes from.",
+          "Forecasts freeway speed 5–60 minutes ahead at 207 Los Angeles detectors (METR-LA) under one leak-free protocol, and tests whether models that read the road network beat strong per-detector ones.",
         bullets: [
           { k: "Hybrid model, best of the study", t: "DCRNN + an XGBoost residual corrector cuts 60-minute error 13.3% vs XGBoost" },
           { k: "Statistically significant", t: "the graph model wins on all 24 test days — day-level bootstrap and Diebold-Mariano, p < 0.0001" },
@@ -392,22 +379,22 @@ export const portfolio: Portfolio = {
         stack: ["PyTorch", "Graph neural networks", "DCRNN", "GATv2", "XGBoost", "Statistical testing", "Streamlit"],
         metrics: [
           { v: "13.3%", l: "lower 60-min error" },
-          { v: "207", l: "road sensors" },
+          { v: "207", l: "road detectors" },
           { v: "24/24", l: "test days won" },
         ],
         links: [
           { label: "Live dashboard", href: "https://trafficflowamldl.streamlit.app" },
           { label: "Source", href: `${GITHUB}/TrafficFlowControl_AIML-DL_T036` },
         ],
-        note: "Team of five · Newton School of Technology · with an IEEE-format research paper.",
-        role: "Leak-free preprocessing, baselines, the hybrid model, significance tests and reports",
+        note: "Team of three, Newton School of Technology.",
+        role: "Preprocessing, features, baselines, DCRNN and ablations, the hybrid model, significance tests and both reports",
         features: [
           { t: "Leak-free splits", d: "Chronological 70/10/20 with purged boundary windows" },
           { t: "Six baselines", d: "Persistence to XGBoost on one 46-feature table" },
           { t: "Graph models", d: "STGAT attention and DCRNN diffusion over the road graph" },
-          { t: "Hybrid corrector", d: "XGBoost learns DCRNN's residual — lowest error at every horizon" },
+          { t: "Hybrid corrector", d: "XGBoost corrects DCRNN's residual; lowest MAE at 15, 30 and 60 minutes" },
         ],
-        art: "trafficgnn",
+        art: "metroflow",
         imageLabel: "trafficflowamldl.streamlit.app",
       },
       {
@@ -430,7 +417,7 @@ export const portfolio: Portfolio = {
           { v: "92", l: "backend tests" },
         ],
         links: [
-          { label: "Live demo", href: "https://fin-sight-ai-intelligent-financial.vercel.app/" },
+          { label: "Live demo", href: "https://finsight-ai-intelligent-financial.vercel.app" },
           { label: "Source", href: `${GITHUB}/FinSight-AI-Intelligent-Financial-Forecasting-Advisory-System` },
         ],
         note: "Backend runs on Render's free tier — the first request can take ~30s to wake.",
@@ -442,7 +429,7 @@ export const portfolio: Portfolio = {
           { t: "Goal planner", d: "Monte Carlo odds of hitting each savings goal on time" },
         ],
         art: "finsight",
-        imageLabel: "fin-sight-ai-intelligent-financial.vercel.app",
+        imageLabel: "finsight-ai-intelligent-financial.vercel.app",
       },
       {
         path: "data",
@@ -453,7 +440,7 @@ export const portfolio: Portfolio = {
         description:
           "An end-to-end fraud analytics pipeline over 1M transactions and 50,000 accounts across three years: Python ETL, statistical analysis and network analysis, delivered as an interactive Tableau monitoring dashboard.",
         bullets: [
-          { k: "$12.52M fraud isolated", t: "17,143 fraudulent transactions — 1.71% of total volume — profiled by type, time and account" },
+          { k: "$12.52M fraud isolated", t: "17,143 fraudulent transactions, 1.71% of the million and 6.8% of the money, by type, time and account" },
           { k: "Where the risk lives", t: "card-not-present drives 34.9% of fraud; crypto (5.3%) and money transfer (4.1%) carry the highest rates" },
           { k: "Actionable security signal", t: "40% of fraud lands between midnight and 5 AM, and accounts without 2FA take ~40% of cases" },
         ],
@@ -471,7 +458,7 @@ export const portfolio: Portfolio = {
           { label: "Source", href: `${GITHUB}/TransactionsFraudDetection_Tableau` },
         ],
         note: "",
-        role: "ETL pipeline, feature engineering, statistical analysis and the Tableau dashboard",
+        role: "Published the Tableau dashboard",
         features: [
           { t: "ETL pipeline", d: "Modular Python: parsing, dedup, typed features, Git LFS data" },
           { t: "Behaviour features", d: "Velocity, amount-to-average ratios and off-hours flags" },
@@ -484,7 +471,7 @@ export const portfolio: Portfolio = {
       {
         path: "data",
         category: "Data Analytics · Visualisation",
-        period: "2025",
+        period: "Apr 2026",
         title: "RHoMIS Analytics",
         tagline: "54,873 farming households, one question: who goes hungry, and why?",
         description:
@@ -523,15 +510,15 @@ export const portfolio: Portfolio = {
         category: "Market Analytics · Tableau",
         period: "Nov 2026",
         title: "Zomato Market Analytics",
-        tagline: "What makes a Bengaluru restaurant rate well — and earn well?",
+        tagline: "Where Bengaluru eats, what it costs and how it rates.",
         description:
-          "An interactive Tableau dashboard over 681 Bengaluru restaurants and 67,786 customer ratings, slicing the market by area, cuisine, online ordering and revenue tier to show where demand and quality concentrate.",
+          "An interactive Tableau dashboard over 681 Bengaluru restaurants and 67,786 customer ratings, filtered by area, cuisine, online ordering and revenue category.",
         bullets: [
           { k: "Market at a glance", t: "681 restaurants, 67,786 ratings, a 3.42 average rating and ₹405 average cost for two" },
           { k: "Four live filters", t: "area, online ordering, revenue category and cuisine re-slice every view at once" },
-          { k: "Demand mapped", t: "top areas, the ten leading cuisines and online-order adoption (365 of 681) side by side" },
+          { k: "Side by side", t: "top areas, the top ten cuisines and online ordering (365 of 681 restaurants)" },
         ],
-        stack: ["Tableau", "Data cleaning", "Univariate analysis", "Calculated fields", "Dashboard design"],
+        stack: ["Tableau", "Univariate analysis", "Dashboard design"],
         metrics: [
           { v: "681", l: "restaurants" },
           { v: "67,786", l: "ratings analysed" },
@@ -544,11 +531,11 @@ export const portfolio: Portfolio = {
           },
         ],
         note: "",
-        role: "Solo — data preparation, analysis and dashboard design",
+        role: "Published the Tableau dashboard",
         features: [
           { t: "KPI strip", d: "Restaurants, ratings, average rating and cost for two" },
           { t: "Rating spread", d: "Distribution of ratings with its trend line" },
-          { t: "Cuisine demand", d: "Bubble view of the ten most-voted cuisines" },
+          { t: "Cuisine demand", d: "Bubble view of the top ten cuisines" },
           { t: "Revenue tiers", d: "High, medium and low revenue restaurants compared" },
         ],
         art: "zomato",
@@ -564,10 +551,10 @@ export const portfolio: Portfolio = {
           "A premium auction platform covering the full lifecycle — listing, live competitive bidding and automated commission settlement — on a security-hardened MERN stack.",
         bullets: [
           { k: "Race-free bidding", t: "atomic writes resolve simultaneous equal bids to one winner and a single HTTP 409" },
-          { k: "Commission engine", t: "auto-closes expired lots and settles a 10% commission — idempotent via a compound unique index" },
+          { k: "Commission engine", t: "auto-closes expired lots and settles a 10% commission, with a unique index so each auction is charged once" },
           { k: "5 security layers", t: "JWT + 3-tier RBAC, Helmet, per-route rate limits and input validation" },
         ],
-        stack: ["MongoDB", "Express", "React", "Node.js", "Groq (Llama 3.3)", "GSAP", "three.js", "Recharts"],
+        stack: ["MongoDB", "Express", "React", "Node.js", "Groq (gpt-oss-120b)", "GSAP", "three.js", "Recharts"],
         metrics: [
           { v: "30+", l: "API endpoints" },
           { v: "3", l: "access tiers" },
@@ -582,7 +569,7 @@ export const portfolio: Portfolio = {
         features: [
           { t: "Live bidding", d: "Server-validated bids with countdown timers" },
           { t: "Commissions", d: "Automatic settlement, payouts and audit trail" },
-          { t: "AI concierge", d: "Groq Llama 3.3 70B with a luxury-house persona" },
+          { t: "AI concierge", d: "Groq gpt-oss-120b with a luxury-house persona" },
           { t: "Governance", d: "Superadmin analytics, revenue trends, roles and suspensions" },
         ],
         art: "bidverse",
@@ -591,33 +578,33 @@ export const portfolio: Portfolio = {
       {
         path: "dev",
         category: "Infrastructure · System Design",
-        period: "Nov 2025",
+        period: "Mar – Apr 2026",
         title: "Orbyt",
         tagline: "One OpenAI-compatible endpoint in front of every model provider.",
         description:
-          "A self-hosted LLM gateway: point any OpenAI SDK client at /v1/chat/completions and Orbyt routes, retries and falls back across providers — with keys, limits and live traces in its own dashboard.",
+          "A self-hosted LLM gateway built by a team. Point any OpenAI SDK client at /v1/chat/completions and it picks a provider, retries and falls back. I built the workspace people use to run it.",
         bullets: [
-          { k: "Drop-in OpenAI compatibility", t: "any OpenAI SDK client works unchanged, with bring-your-own-key and pluggable provider adapters" },
-          { k: "Routes by cost and latency", t: "a Redis key pool, model fallback chains and exponential-backoff retries with jitter over 40+ error classes" },
-          { k: "Real-time SSE tracing", t: "a Clerk-secured dashboard with SHA-256-hashed API keys and RPM / TPM rate limits" },
+          { k: "My part: the workspace", t: "dashboard, API-key management, the model playground and the landing page, in Next.js" },
+          { k: "Three layers of recovery", t: "retry with backoff and jitter, then another provider, then another model" },
+          { k: "Drop-in compatible", t: "the official OpenAI SDK works by changing only the base URL, with your own key if you have one" },
         ],
-        stack: ["System Design", "TypeScript", "Turborepo", "Next.js", "Redis", "Server-Sent Events", "Clerk", "OpenAI SDK"],
+        stack: ["System Design", "TypeScript", "Turborepo", "Next.js", "Express", "Prisma", "PostgreSQL", "Clerk"],
         metrics: [
           { v: "5", l: "apps in the monorepo" },
           { v: "7", l: "shared packages" },
-          { v: "40+", l: "error classes handled" },
+          { v: "344", l: "models in the registry" },
         ],
         links: [
           { label: "Live demo", href: "https://openrouter-clone-dashboard.vercel.app" },
           { label: "Source", href: `${GITHUB}/openrouter-clone` },
         ],
-        note: "",
-        role: "Co-builder — gateway routing, fallbacks, provider adapters and tracing UI",
+        note: "Team of five; my repository is a fork of the team's.",
+        role: "Frontend — dashboard, API keys, playground and landing page",
         features: [
           { t: "Fallback chains", d: "A failed model hands the request to the next in line" },
-          { t: "Smart routing", d: "Providers chosen by cost and latency from a Redis pool" },
-          { t: "Live traces", d: "Every request streamed to the dashboard over SSE" },
-          { t: "Key security", d: "SHA-256-hashed keys with per-key RPM / TPM limits" },
+          { t: "Provider choice", d: "Pick by cost, latency, throughput or a weighted default" },
+          { t: "Live traces", d: "Every attempt streamed to a tracing UI as it happens" },
+          { t: "Hashed keys", d: "API keys stored and looked up as SHA-256 hashes" },
         ],
         art: "orbyt",
         imageLabel: "openrouter-clone-dashboard.vercel.app",
@@ -676,12 +663,7 @@ export const portfolio: Portfolio = {
         title: "Naukri Young Turks",
         body: "Emerging Talent Recognition from Naukri.com, awarded in the 2025 edition of Young Turks.",
         date: "Sep 2025",
-        links: [
-          {
-            label: "View certificate",
-            href: "https://drive.google.com/file/d/1oe2XH_Jb1qrWq9vF2FvAhf0s_IzL-Bor/view?usp=sharing",
-          },
-        ],
+        links: [], // the Drive certificate link returned 404 on 2026-11-25; add the new one here
       },
       {
         kicker: "Leadership",
@@ -714,7 +696,7 @@ export const portfolio: Portfolio = {
         title: "Generative AI & LLM Apps",
         trace: "Tool-call trace",
         description: "LLMs that do real work — and never break the product when the model does.",
-        tags: ["RAG", "Tool calling", "Groq", "LLaMA 3.3 70B", "ChromaDB", "LLM gateways", "Structured output", "Fallback design"],
+        tags: ["RAG", "Tool calling", "Groq", "gpt-oss-120b", "ChromaDB", "Embeddings", "Structured output", "Fallback design"],
         provenIn: { label: "Aura Roast", href: "#work" },
         log: [
           "barista.chat(\"smooth, low acidity\")",
@@ -727,10 +709,10 @@ export const portfolio: Portfolio = {
         title: "Machine Learning & Deep Learning",
         trace: "Model card",
         description: "Models validated before anyone trusts them — leak-free splits, honest baselines, significance tests.",
-        tags: ["Python", "PyTorch", "Graph neural networks", "XGBoost", "Scikit-learn", "DistilBERT", "SHAP", "Forecasting", "MLflow"],
-        provenIn: { label: "TrafficGNN", href: "#work" },
+        tags: ["Python", "PyTorch", "Graph neural networks", "XGBoost", "Scikit-learn", "Embeddings", "SHAP", "Forecasting", "MLflow"],
+        provenIn: { label: "MetroFlow", href: "#work" },
         log: [
-          "load(METR-LA) · 207 sensors × 34,272 steps",
+          "load(METR-LA) · 207 detectors × 34,272 steps",
           "split(70/10/20, purge_boundaries=True)",
           "fit(DCRNN) + xgb_residual() · 3 seeds",
           "MAE@60 −13.3% · 24/24 days, p < 0.0001 ✓",
@@ -740,7 +722,7 @@ export const portfolio: Portfolio = {
         title: "Full-Stack Engineering",
         trace: "Request log",
         description: "Typed, server-rendered platforms with correctness built in.",
-        tags: ["System Design", "Next.js", "React.js", "TypeScript", "NestJS", "Node.js", "Express.js", "PostgreSQL", "Redis", "MongoDB", "Kysely", "JWT"],
+        tags: ["System Design", "Next.js", "React.js", "TypeScript", "NestJS", "Node.js", "Express.js", "PostgreSQL", "MongoDB", "Kysely", "JWT"],
         provenIn: { label: "HireFlow", href: "#work" },
         log: [
           "POST /api/v1/interviews · exclusion constraint ✓",
@@ -772,7 +754,7 @@ export const portfolio: Portfolio = {
           "health_score(user) · 0–100",
           "peer_benchmark(income_bracket)",
           "flag(unusual_spend, z > 3)",
-          "advice(groq) in <100ms ✓",
+          "goal_odds(paths=4,000) ✓",
         ],
       },
     ],
@@ -790,7 +772,7 @@ export const portfolio: Portfolio = {
     lead: "Most engineers pick a lane. I work across *the whole road.*",
     paragraphs: [
       "BTech Computer Science & AI student at Newton School of Technology, Rishihood University. I build full-stack products and applied ML — from schema and system design to LLM-powered features.",
-      "I care about systems that survive real users. Outside the editor, I'm VP of the Finance Club — workshops, investment simulations and the club's budget.",
+      "I care about software that is tested before people depend on it. Outside the editor, I'm VP of the Finance Club — workshops, investment simulations and the club's budget.",
     ],
     education: [
       {

@@ -8,12 +8,11 @@ import { gsap } from "@/lib/gsap";
 import { NODE, TRACE } from "@/components/Logo";
 import LocalTime from "@/components/LocalTime";
 
-const ROWS = portfolio.process.steps[0]?.stat.v ?? "54,873";
 const PHASES = [
   { at: 0, label: "Initialising runtime" },
   { at: 0.15, label: "Loading model weights" },
   { at: 0.35, label: "Compiling shaders" },
-  { at: 0.56, label: `Training on ${ROWS} rows` },
+  { at: 0.56, label: "Loading case studies" },
   { at: 0.8, label: "Hydrating interface" },
 ];
 const MIN = 2.7; // s: the count is never rushed…

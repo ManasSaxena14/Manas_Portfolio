@@ -136,7 +136,7 @@ export default function Aura({ url }: { url: string }) {
             <span className="grid size-[2.7cqw] place-items-center rounded-full bg-[#d9a55b] font-mono text-[1.05cqw] font-bold text-[#1a0f07]">AI</span>
             <span className="flex flex-col leading-tight">
               <span className="text-[1.4cqw] font-[620] text-[#fbf3e6]">AI Barista</span>
-              <span className="font-mono text-[.95cqw] tracking-[.08em] text-[#a8906f] uppercase">LLaMA 3.3 · tool calling</span>
+              <span className="font-mono text-[.95cqw] tracking-[.08em] text-[#a8906f] uppercase">gpt-oss · tool calling</span>
             </span>
             <span className="pa-typing ml-auto flex gap-[.35cqw]">
               <i className="size-[.55cqw] rounded-full bg-[#d9a55b]" />

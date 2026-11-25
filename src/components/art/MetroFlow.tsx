@@ -18,7 +18,7 @@ const SENSORS = [
   [14, 59], [27, 50], [38, 40], [50, 31.5], [62, 26], [74, 21.5], [86, 17.5],
 ];
 
-export default function TrafficGNN() {
+export default function MetroFlow() {
   return (
     <Scene className="bg-[radial-gradient(120%_100%_at_70%_20%,#1a1410_0%,#0a0807_45%,#030202_100%)]">
       {/* City glow on the horizon and haze */}
@@ -75,7 +75,7 @@ export default function TrafficGNN() {
         <div className="mt-[.8cqw] flex items-center gap-[1.2cqw] font-mono text-[1cqw] text-[#d8c7b4]/80">
           <span>DCRNN + XGBoost hybrid</span>
           <span className="h-px w-[3cqw] bg-[#d8c7b4]/40" />
-          <span>207 sensors · METR-LA</span>
+          <span>207 detectors · METR-LA</span>
         </div>
       </Layer>
 
@@ -83,7 +83,7 @@ export default function TrafficGNN() {
       <Layer d={1.6} className="right-[5%] bottom-[7%]">
         <div className="flex flex-col items-end gap-[.5cqw] font-mono text-[.95cqw] text-[#d8c7b4]/75">
           <span className="flex items-center gap-[.6cqw]">
-            graph sensor <i className="size-[1cqw] rounded-full border-[.15cqw] border-[#9ff3c4]" />
+            detector <i className="size-[1cqw] rounded-full border-[.15cqw] border-[#9ff3c4]" />
           </span>
           <span className="flex items-center gap-[.6cqw]">
             jam travelling upstream <i className="h-[.4cqw] w-[2cqw] rounded-full bg-[#ff2d2d]" />

@@ -1,7 +1,7 @@
 import { Layer, Scene } from "./Scene";
 
 // Studio still life on pearl. A support ticket enters as one beam of white
-// light; a glass prism splits it into three: the cited reply, the routed
+// light; a glass prism splits it into three: the help article, the routed
 // queue and the escalation risk, each landing on its own small card. The only
 // light, spectral, product-photograph preview on the page.
 
@@ -15,9 +15,9 @@ const MUTED = "#77748a";
 const IN = "M40 42 L72.5 45.5";
 const INSIDE = "M72.5 45.5 L87.5 45.5";
 const OUTS = [
-  { d: "M85.2 41.2 L116 15", c: "#6366f1", k: "Draft reply", v: "5 cited sources", y: "15%" },
-  { d: "M87.5 45.5 L116 45", c: "#14b8a6", k: "Queue", v: "Billing & Payments · 99%", y: "45%" },
-  { d: "M89.8 49.9 L116 75", c: "#f43f5e", k: "Escalation risk", v: "82% · alert", y: "75%" },
+  { d: "M85.2 41.2 L116 15", c: "#6366f1", k: "Help article", v: "Password reset · 63% match", y: "15%" },
+  { d: "M87.5 45.5 L116 45", c: "#14b8a6", k: "Queue", v: "Service Outages · 47%, check", y: "45%" },
+  { d: "M89.8 49.9 L116 75", c: "#f43f5e", k: "Escalation risk", v: "82% · flagged", y: "75%" },
 ];
 
 export default function ResolveIQ() {
@@ -85,7 +85,7 @@ export default function ResolveIQ() {
             <span className="text-[#f43f5e]">new</span>
           </div>
           <div className="mt-[.6cqw] text-[1.25cqw] leading-[1.4]" style={{ color: INK }}>
-            “I was charged twice and nobody has replied.”
+            “Our whole team has been locked out since this morning.”
           </div>
         </div>
       </Layer>

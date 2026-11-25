@@ -565,7 +565,7 @@ function ProjectCard({ p, i, total, hue }: { p: Project; i: number; total: numbe
               className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 ${live ? "border-[#86efac]/35 text-[#86efac]" : "border-line text-dim"}`}
             >
               <span className={`size-1.5 rounded-full ${live ? "bg-[#86efac]" : "bg-faint"}`} />
-              {live ? "Live" : "Demo soon"}
+              {live ? "Live" : "Not deployed yet"}
             </span>
             {scope && <span className="rounded-full border border-line px-2.5 py-1 text-dim">{scope}</span>}
             <span className="rounded-full border border-line px-2.5 py-1 text-dim">{p.period}</span>
