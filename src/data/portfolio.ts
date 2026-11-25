@@ -580,12 +580,12 @@ export const portfolio: Portfolio = {
         category: "Infrastructure · System Design",
         period: "Mar – Apr 2026",
         title: "Orbyt",
-        tagline: "One OpenAI-compatible endpoint in front of every model provider.",
+        tagline: "One OpenAI-compatible endpoint with retries and model fallback built in.",
         description:
-          "A self-hosted LLM gateway built by a team. Point any OpenAI SDK client at /v1/chat/completions and it picks a provider, retries and falls back. I built the workspace people use to run it.",
+          "A self-hosted LLM gateway built by a team. Point any OpenAI SDK client at /v1/chat/completions and it retries, falls back to the next model and traces every attempt. I built the workspace people use to run it.",
         bullets: [
           { k: "My part: the workspace", t: "dashboard, API-key management, the model playground and the landing page, in Next.js" },
-          { k: "Three layers of recovery", t: "retry with backoff and jitter, then another provider, then another model" },
+          { k: "45 error types, four actions", t: "each failure is retried with backoff and jitter, sent to the next model, returned to the caller or failed fast" },
           { k: "Drop-in compatible", t: "the official OpenAI SDK works by changing only the base URL, with your own key if you have one" },
         ],
         stack: ["System Design", "TypeScript", "Turborepo", "Next.js", "Express", "Prisma", "PostgreSQL", "Clerk"],
@@ -596,13 +596,13 @@ export const portfolio: Portfolio = {
         ],
         links: [
           { label: "Live demo", href: "https://openrouter-clone-dashboard.vercel.app" },
-          { label: "Source", href: `${GITHUB}/openrouter-clone` },
+          { label: "Source", href: `${GITHUB}/ORBYT--openrouter-clone` },
         ],
-        note: "Team of five; my repository is a fork of the team's.",
+        note: "A project by a team of five. Source is my fork of the team repository; Gemini is the provider implemented so far.",
         role: "Frontend — dashboard, API keys, playground and landing page",
         features: [
           { t: "Fallback chains", d: "A failed model hands the request to the next in line" },
-          { t: "Provider choice", d: "Pick by cost, latency, throughput or a weighted default" },
+          { t: "Provider order", d: "Ranked by cost, latency, throughput or a weighted default" },
           { t: "Live traces", d: "Every attempt streamed to a tracing UI as it happens" },
           { t: "Hashed keys", d: "API keys stored and looked up as SHA-256 hashes" },
         ],
